@@ -46,9 +46,10 @@
         .gameboy .screen-cont .screen {
             width: 100% !important;
             height: 100% !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative;
         }
         
         /* Remove colored stripes */
@@ -57,11 +58,13 @@
             display: none !important;
         }
         
-        /* P5 canvas will be created here */
+        /* Center P5 canvas */
         .gameboy .screen-cont .screen canvas {
-            max-width: 100%;
-            max-height: 100%;
-            image-rendering: pixelated;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            image-rendering: pixelated !important;
+            display: block !important;
+            margin: 0 auto !important;
         }
         
         /* Hide animated text */
