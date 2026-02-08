@@ -24,11 +24,30 @@
             overflow: hidden;
         }
         
-        /* Make buttons clickable */
-        .btn-direction, .btn-AB {
+        /* Make buttons clickable with higher z-index */
+        .btn-direction {
+            cursor: pointer !important;
+            user-select: none !important;
+            z-index: 100 !important;
+            position: relative !important;
+        }
+        
+        .btn-AB {
             cursor: pointer !important;
             user-select: none !important;
             z-index: 10 !important;
+        }
+        
+        /* Make vertical and horizontal parts of D-pad clickable */
+        .btn-direction .vertical,
+        .btn-direction .horizontal {
+            z-index: 101 !important;
+            pointer-events: auto !important;
+        }
+        
+        /* Disable pointer events on the center circle shadow */
+        .btn-direction:before {
+            pointer-events: none !important;
         }
         
         /* Position canvas within screen */
