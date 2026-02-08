@@ -79,9 +79,11 @@ function titleScreen(){
       textFont(RetroFont);
       textSize(px*10);
       textAlign(CENTER, CENTER);
-      text("GAME OVER", width/2, height/2 - px*10);
+      text("GAME OVER", width/2, height/2 - px*20);
+      textSize(px*8);
+      text("Score: " + score, width/2, height/2);
       textSize(px*6);
-      text("Press START to Play Again", width/2, height/2 + px*10);
+      text("Press START to Play Again", width/2, height/2 + px*20);
       pop()
     } else {
       // Initial start screen
