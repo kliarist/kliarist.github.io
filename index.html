@@ -49,7 +49,16 @@
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            position: relative;
+            position: relative !important;
+        }
+        
+        /* Position header absolutely so it doesn't affect canvas layout */
+        .gameboy .screen-cont .screen .header {
+            position: absolute !important;
+            top: -30px !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1 !important;
         }
         
         /* Remove colored stripes */
@@ -64,7 +73,7 @@
             max-height: 100% !important;
             image-rendering: pixelated !important;
             display: block !important;
-            margin: 0 auto !important;
+            position: relative !important;
         }
         
         /* Hide animated text */
