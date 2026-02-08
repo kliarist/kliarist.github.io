@@ -61,6 +61,11 @@ window.addEventListener("keydown",
         }
         gameStart = true;
         window.gameStart = true;
+        
+        // Start music on first interaction
+        if(!themeSongPlay) {
+            playPauseMusic();
+        }
     }
 })
 const checkifPossible=(cb,xoff,yoff)=>{

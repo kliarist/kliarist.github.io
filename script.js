@@ -20,7 +20,7 @@ function setup() {
     import_images()
     load_Font();
     setRandomiser()
-    playPauseMusic()
+    // Don't auto-play music - wait for user interaction
     setBLock()
     clearGrid()
     setStaticBlocks()
