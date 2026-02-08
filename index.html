@@ -70,8 +70,6 @@
         <div class="phones">phones</div>
     </div>
     <script>
-        console.log('Button controls loaded');
-        
         // D-Pad controls
         const dpad = document.getElementById('dpad');
         
@@ -83,51 +81,31 @@
             const x = clientX - centerX;
             const y = clientY - centerY;
             
-            console.log('D-pad clicked:', {clientX, clientY, centerX, centerY, x, y, absX: Math.abs(x), absY: Math.abs(y)});
-            
             const absX = Math.abs(x);
             const absY = Math.abs(y);
             
-            let keyPressed = null;
+            let key = null;
             
             if(absX > absY) {
-                // Horizontal
-                if(x > 0) {
-                    keyPressed = 'ArrowRight';
-                    console.log('RIGHT pressed - dispatching ArrowRight');
-                } else {
-                    keyPressed = 'ArrowLeft';
-                    console.log('LEFT pressed - dispatching ArrowLeft');
-                }
+                key = (x > 0) ? 'ArrowRight' : 'ArrowLeft';
             } else {
-                // Vertical - only down works
-                if(y > 0) {
-                    keyPressed = 'ArrowDown';
-                    console.log('DOWN pressed - dispatching ArrowDown');
-                } else {
-                    console.log('UP pressed - ignored (use A button to rotate)');
-                }
+                if(y > 0) key = 'ArrowDown';
             }
             
-            if(keyPressed) {
-                console.log('Dispatching event with key:', keyPressed);
-                // Simulate actual key press more accurately
-                const keydownEvent = new KeyboardEvent('keydown', {
-                    key: keyPressed,
-                    code: keyPressed,
+            if(key) {
+                const event = new KeyboardEvent('keydown', {
+                    key: key,
                     bubbles: true,
-                    cancelable: true
+                    cancelable: true,
+                    view: window
                 });
-                
-                // Dispatch to window (where controls.js listener is)
-                window.dispatchEvent(keydownEvent);
-                console.log('Event dispatched');
+                window.dispatchEvent(event);
             }
         }
         
         dpad.addEventListener('click', function(e) {
+            e.preventDefault();
             e.stopPropagation();
-            console.log('D-pad click event');
             handleDpad(e.clientX, e.clientY);
         });
         
