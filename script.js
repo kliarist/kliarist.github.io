@@ -43,18 +43,16 @@ function draw() {
     display_side_wall();
     // display_hold_block()
     
-    // Show PAUSED indicator
+    // Show subtle PAUSED indicator
     if(gameOver){
       push()
-      fill(0, 0, 0, 180);
+      fill(0, 0, 0, 150);
       rect(0, 0, width, height);
-      fill(255, 255, 255);
+      fill(255, 255, 255, 200);
       textFont(RetroFont);
-      textSize(boxSide * 2);
+      textSize(boxSide * 1.5);
       textAlign(CENTER, CENTER);
       text("PAUSED", width/2, height/2);
-      textSize(boxSide);
-      text("Press SPACE to Resume", width/2, height/2 + boxSide * 3);
       pop()
     }
     else if(frameCount%ceil(Currentspeed) ===0){
@@ -70,13 +68,31 @@ function draw() {
 }
 function titleScreen(){
   push()
-    image(title_screen_img,0,0,width,height)
-    push()
-    fill(black);
-    textFont(RetroFont);
-    textSize(px*8);
-    text("Press Enter to Start", px*8, px*121);
-    pop()
+    // Check if it's game over or initial screen
+    if(gameOver) {
+      // Game over screen
+      image(title_screen_img,0,0,width,height)
+      push()
+      fill(0, 0, 0, 150);
+      rect(0, 0, width, height);
+      fill(255, 255, 255, 200);
+      textFont(RetroFont);
+      textSize(px*10);
+      textAlign(CENTER, CENTER);
+      text("GAME OVER", width/2, height/2 - px*10);
+      textSize(px*6);
+      text("Press START to Play Again", width/2, height/2 + px*10);
+      pop()
+    } else {
+      // Initial start screen
+      image(title_screen_img,0,0,width,height)
+      push()
+      fill(black);
+      textFont(RetroFont);
+      textSize(px*8);
+      text("Press Enter to Start", px*8, px*121);
+      pop()
+    }
   pop()
 }
 function import_images(){

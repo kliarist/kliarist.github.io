@@ -46,6 +46,19 @@ window.addEventListener("keydown",
         topOff = tempTopOff
     }
     else if(event.key ==="Enter"){
+        // Reset game on game over
+        if(gameOver) {
+            gameOver = false;
+            score = 0;
+            level = 0;
+            speed = 30;
+            clearGrid();
+            setStaticBlocks();
+            setStaticBlockColors();
+            setBLock();
+            setRandomiser();
+            setTempBlock();
+        }
         gameStart = true;
         window.gameStart = true;
     }
