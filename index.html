@@ -28,10 +28,7 @@
         .btn-direction, .btn-AB, .btn-start-select {
             cursor: pointer !important;
             user-select: none !important;
-        }
-        
-        .btn-direction:active, .btn-AB:active, .btn-start-select:active {
-            transform: scale(0.95) !important;
+            z-index: 10 !important;
         }
         
         /* Position canvas within screen */
@@ -103,10 +100,28 @@
         // Start/Select buttons
         const btnStartSelect = document.getElementById('btnStartSelect');
         btnStartSelect.addEventListener('click', function(e) {
+            e.stopPropagation();
             const rect = btnStartSelect.getBoundingClientRect();
             const x = e.clientX - rect.left;
             
             // Left button = Select (pause), Right button = Start
+            if(x < rect.width / 2) {
+                // Select - pause
+                window.dispatchEvent(new KeyboardEvent('keydown', {key: ' '}));
+            } else {
+                // Start
+                window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+            }
+        });
+        
+        // Make start/select also work with touch events
+        btnStartSelect.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const rect = btnStartSelect.getBoundingClientRect();
+            const touch = e.changedTouches[0];
+            const x = touch.clientX - rect.left;
+            
             if(x < rect.width / 2) {
                 window.dispatchEvent(new KeyboardEvent('keydown', {key: ' '}));
             } else {
