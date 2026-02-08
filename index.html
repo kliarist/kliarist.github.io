@@ -28,12 +28,12 @@
             overflow: hidden;
         }
         
-        /* Full screen gameboy console */
+        /* Smaller console to fit screen better */
         .gameboy {
-            width: 90vmin !important;
-            height: 140vmin !important;
-            max-width: 800px;
-            max-height: 1200px;
+            width: 70vmin !important;
+            height: 110vmin !important;
+            max-width: 600px;
+            max-height: 950px;
         }
         
         /* Screen area */
@@ -49,6 +49,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        /* Remove colored stripes */
+        .gameboy .screen-cont .screen .header:before,
+        .gameboy .screen-cont .screen .header:after {
+            display: none !important;
         }
         
         /* P5 canvas will be created here */
