@@ -153,12 +153,13 @@
             const x = clientX - rect.left;
             const y = clientY - rect.top;
             
-            console.log('Start/Select clicked, x:', x, 'y:', y);
+            console.log('Start/Select clicked, x:', x, 'y:', y, 'rect.width:', rect.width);
             
-            // The right oval (START) is at box-shadow offset 57px 27px
-            // Simple: if x > 50, it's likely the right button
-            if(x > 50) {
-                console.log('START button pressed');
+            // The element itself (width 60px) is the LEFT button (SELECT)
+            // The box-shadow at offset 57px 27px creates the RIGHT button (START)
+            // So if x > 60, it's the right button (START)
+            if(x > 60) {
+                console.log('START button (right) pressed');
                 if(!window.gameStart) {
                     const event = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true});
                     window.dispatchEvent(event);
@@ -166,6 +167,8 @@
                     const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
                     window.dispatchEvent(event);
                 }
+            } else {
+                console.log('SELECT button (left) pressed - ignored');
             }
         }
         
