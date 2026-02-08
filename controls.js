@@ -36,9 +36,11 @@ window.addEventListener("keydown",
         Holdpressed = true
     }
     else if(event.key ===" "){
-        gameOver = !gameOver
-        setTempBlock()
-        playPauseMusic();
+        if(gameStart) {
+            gameOver = !gameOver
+            setTempBlock()
+            playPauseMusic();
+        }
     }
     else if(event.key==="Shift"){
         topOff = tempTopOff

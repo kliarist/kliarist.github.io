@@ -41,7 +41,22 @@ function draw() {
     display_next_set_of_block()
     display_side_wall();
     // display_hold_block()
-    if(!gameOver && frameCount%ceil(Currentspeed) ===0){
+    
+    // Show PAUSED indicator
+    if(gameOver){
+      push()
+      fill(0, 0, 0, 180);
+      rect(0, 0, width, height);
+      fill(255, 255, 255);
+      textFont(RetroFont);
+      textSize(boxSide * 2);
+      textAlign(CENTER, CENTER);
+      text("PAUSED", width/2, height/2);
+      textSize(boxSide);
+      text("Press SPACE to Resume", width/2, height/2 + boxSide * 3);
+      pop()
+    }
+    else if(frameCount%ceil(Currentspeed) ===0){
       updateGrid()
       checkRow()
       Currentspeed=speed
