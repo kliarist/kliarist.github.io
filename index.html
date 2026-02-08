@@ -24,6 +24,16 @@
             overflow: hidden;
         }
         
+        /* Make buttons clickable */
+        .btn-direction, .btn-AB, .btn-start-select {
+            cursor: pointer !important;
+            user-select: none !important;
+        }
+        
+        .btn-direction:active, .btn-AB:active, .btn-start-select:active {
+            transform: scale(0.95) !important;
+        }
+        
         /* Position canvas within screen */
         .gameboy .screen-cont .screen canvas {
             position: absolute !important;
@@ -41,23 +51,68 @@
 <body>
     <div class="gameboy">
         <div class="screen-cont">
-            <div class="power"></div>
+            <div class="power power-on"></div>
             <div class="screen">
                 <div class="header">DOT MATRIX WITH STEREO SOUND</div>
                 <!-- Canvas will be injected here by p5.js -->
             </div>
         </div>
         <div class="controls-cont">
-            <div class="btn-direction">
+            <div class="btn-direction" id="dpad">
                 <div class="vertical"></div>
                 <div class="horizontal"></div>
             </div>
-            <div class="btn-AB"></div>
-            <div class="btn-start-select"></div>
+            <div class="btn-AB" id="btnAB"></div>
+            <div class="btn-start-select" id="btnStartSelect"></div>
         </div>
         <div class="speakers"></div>
         <div class="on-off">< off-on ></div>
         <div class="phones">phones</div>
     </div>
+    <script>
+        // D-Pad controls
+        const dpad = document.getElementById('dpad');
+        dpad.addEventListener('click', function(e) {
+            const rect = dpad.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width/2;
+            const y = e.clientY - rect.top - rect.height/2;
+            
+            if(Math.abs(x) > Math.abs(y)) {
+                // Horizontal
+                if(x > 0) window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}));
+                else window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
+            } else {
+                // Vertical
+                if(y > 0) window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
+                else window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
+            }
+        });
+        
+        // A/B buttons
+        const btnAB = document.getElementById('btnAB');
+        btnAB.addEventListener('click', function(e) {
+            const rect = btnAB.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            
+            // Left button = A (rotate), Right button = B (unused)
+            if(x < rect.width / 2) {
+                window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
+            }
+        });
+        
+        // Start/Select buttons
+        const btnStartSelect = document.getElementById('btnStartSelect');
+        btnStartSelect.addEventListener('click', function(e) {
+            const rect = btnStartSelect.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            
+            // Left button = Select (pause), Right button = Start
+            if(x < rect.width / 2) {
+                window.dispatchEvent(new KeyboardEvent('keydown', {key: ' '}));
+            } else {
+                window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+            }
+        });
+    </script>
 </body>
 </html>
