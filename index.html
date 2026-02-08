@@ -73,6 +73,7 @@
         // D-Pad controls
         const dpad = document.getElementById('dpad');
         
+        // D-Pad controls - call game functions directly instead of dispatching events
         function handleDpad(clientX, clientY) {
             const rect = dpad.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
@@ -84,22 +85,38 @@
             const absX = Math.abs(x);
             const absY = Math.abs(y);
             
-            let key = null;
-            
+            // Call game functions directly
             if(absX > absY) {
-                key = (x > 0) ? 'ArrowRight' : 'ArrowLeft';
+                // Horizontal
+                if(x > 0) {
+                    // Right
+                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
+                        if(checkifPossible(currentBlock, 0, 1)) {
+                            leftOff = (leftOff + 1) % 11;
+                            setTempBlock();
+                        }
+                    }
+                } else {
+                    // Left
+                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
+                        if(checkifPossible(currentBlock, 0, -1)) {
+                            leftOff = (leftOff - 1) % 11;
+                            setTempBlock();
+                        }
+                    }
+                }
             } else {
-                if(y > 0) key = 'ArrowDown';
-            }
-            
-            if(key) {
-                const event = new KeyboardEvent('keydown', {
-                    key: key,
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                });
-                window.dispatchEvent(event);
+                // Vertical - only down
+                if(y > 0) {
+                    // Down
+                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
+                        if(checkifPossible(currentBlock, 1, 0)) {
+                            topOff = (topOff + 1) % 20;
+                            score++;
+                            setTempBlock();
+                        }
+                    }
+                }
             }
         }
         
@@ -151,31 +168,32 @@
         
         btnStart.addEventListener('click', function(e) {
             e.stopPropagation();
-            console.log('START button clicked!');
             if(!window.gameStart) {
-                const event = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true});
-                window.dispatchEvent(event);
+                gameStart = true;
+                window.gameStart = true;
             } else {
-                const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
-                window.dispatchEvent(event);
+                gameOver = !gameOver;
+                setTempBlock();
+                playPauseMusic();
             }
         });
         
         btnStart.addEventListener('touchend', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('START button touched!');
             if(!window.gameStart) {
-                const event = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true});
-                window.dispatchEvent(event);
+                gameStart = true;
+                window.gameStart = true;
             } else {
-                const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
-                window.dispatchEvent(event);
+                gameOver = !gameOver;
+                setTempBlock();
+                playPauseMusic();
             }
         });
         
         btnSelect.addEventListener('click', function(e) {
-            console.log('SELECT button clicked - ignored');
+            e.stopPropagation();
+            // SELECT does nothing
         });
     </script>
 </body>
