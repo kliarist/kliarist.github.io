@@ -67,125 +67,96 @@
         <div class="phones">phones</div>
     </div>
     <script>
-        // D-Pad controls - map to actual cross shape
+        // D-Pad controls - only left/right/down for movement
         const dpad = document.getElementById('dpad');
-        dpad.addEventListener('click', function(e) {
-            e.stopPropagation();
+        
+        function handleDpad(clientX, clientY) {
             const rect = dpad.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width/2;
-            const y = e.clientY - rect.top - rect.height/2;
+            const x = clientX - rect.left - rect.width/2;
+            const y = clientY - rect.top - rect.height/2;
             
-            // Determine which arm of the cross was clicked
             const absX = Math.abs(x);
             const absY = Math.abs(y);
             
             if(absX > absY) {
-                // Horizontal arm clicked
+                // Horizontal
                 if(x > 0) {
-                    // Right
                     window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}));
                 } else {
-                    // Left
                     window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
                 }
             } else {
-                // Vertical arm clicked
+                // Vertical - only down, up does nothing (A button rotates)
                 if(y > 0) {
-                    // Down
                     window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
-                } else {
-                    // Up
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
                 }
             }
+        }
+        
+        dpad.addEventListener('click', function(e) {
+            e.stopPropagation();
+            handleDpad(e.clientX, e.clientY);
         });
         
-        // Touch support for D-pad
         dpad.addEventListener('touchend', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            const rect = dpad.getBoundingClientRect();
             const touch = e.changedTouches[0];
-            const x = touch.clientX - rect.left - rect.width/2;
-            const y = touch.clientY - rect.top - rect.height/2;
-            
-            const absX = Math.abs(x);
-            const absY = Math.abs(y);
-            
-            if(absX > absY) {
-                if(x > 0) {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}));
-                } else {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
-                }
-            } else {
-                if(y > 0) {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
-                } else {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
-                }
-            }
+            handleDpad(touch.clientX, touch.clientY);
         });
         
-        // A/B buttons
+        // A/B buttons - A (right) rotates
         const btnAB = document.getElementById('btnAB');
-        btnAB.addEventListener('click', function(e) {
-            e.stopPropagation();
+        
+        function handleAB(clientX) {
             const rect = btnAB.getBoundingClientRect();
-            const x = e.clientX - rect.left;
+            const x = clientX - rect.left;
             
-            // Right button = A (rotate)
+            // A button is on the RIGHT (visually on Game Boy)
             if(x > rect.width / 2) {
                 window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
             }
+        }
+        
+        btnAB.addEventListener('click', function(e) {
+            e.stopPropagation();
+            handleAB(e.clientX);
         });
         
-        // Touch support for A/B
         btnAB.addEventListener('touchend', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            const rect = btnAB.getBoundingClientRect();
             const touch = e.changedTouches[0];
-            const x = touch.clientX - rect.left;
-            
-            if(x > rect.width / 2) {
-                window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
-            }
+            handleAB(touch.clientX);
         });
         
-        // Start/Select buttons
+        // Start/Select buttons - Start (right) pauses/resumes
         const btnStartSelect = document.getElementById('btnStartSelect');
-        btnStartSelect.addEventListener('click', function(e) {
-            e.stopPropagation();
+        
+        function handleStartSelect(clientX) {
             const rect = btnStartSelect.getBoundingClientRect();
-            const x = e.clientX - rect.left;
+            const x = clientX - rect.left;
             
-            // Right button = Start (start game or pause/resume)
+            // START button is on the RIGHT
             if(x > rect.width / 2) {
-                // Start button - starts game or pauses/resumes
                 if(!window.gameStart) {
                     window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
                 } else {
                     window.dispatchEvent(new KeyboardEvent('keydown', {key: ' '}));
                 }
             }
+        }
+        
+        btnStartSelect.addEventListener('click', function(e) {
+            e.stopPropagation();
+            handleStartSelect(e.clientX);
         });
         
-        // Make start/select also work with touch events
         btnStartSelect.addEventListener('touchend', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            const rect = btnStartSelect.getBoundingClientRect();
             const touch = e.changedTouches[0];
-            const x = touch.clientX - rect.left;
-            
-            if(x > rect.width / 2) {
-                if(!window.gameStart) {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
-                } else {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: ' '}));
-                }
-            }
+            handleStartSelect(touch.clientX);
         });
     </script>
 </body>
