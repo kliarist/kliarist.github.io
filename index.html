@@ -13,10 +13,16 @@
     <script src="./controls.js"></script>
     <script src="./display_ui.js"></script>
     <style>
-        /* Make canvas responsive within screen */
+        /* Position canvas within screen */
         .gameboy .screen-cont .screen canvas {
-            max-width: 100% !important;
-            max-height: 100% !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            max-width: 95% !important;
+            max-height: 95% !important;
+            width: auto !important;
+            height: auto !important;
             image-rendering: pixelated !important;
         }
     </style>
