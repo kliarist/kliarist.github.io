@@ -72,37 +72,54 @@
     <script>
         console.log('Button controls loaded');
         
-        // D-Pad controls - only left/right/down for movement
+        // D-Pad controls
         const dpad = document.getElementById('dpad');
         
         function handleDpad(clientX, clientY) {
             const rect = dpad.getBoundingClientRect();
-            const x = clientX - rect.left - rect.width/2;
-            const y = clientY - rect.top - rect.height/2;
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const x = clientX - centerX;
+            const y = clientY - centerY;
             
             console.log('D-pad clicked:', {x, y, absX: Math.abs(x), absY: Math.abs(y)});
             
             const absX = Math.abs(x);
             const absY = Math.abs(y);
             
+            let keyPressed = null;
+            
             if(absX > absY) {
                 // Horizontal
                 if(x > 0) {
+                    keyPressed = 'ArrowRight';
                     console.log('RIGHT pressed');
-                    const event = new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true, cancelable: true});
-                    window.dispatchEvent(event);
                 } else {
+                    keyPressed = 'ArrowLeft';
                     console.log('LEFT pressed');
-                    const event = new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true, cancelable: true});
-                    window.dispatchEvent(event);
                 }
             } else {
-                // Vertical - only down
+                // Vertical - only down works
                 if(y > 0) {
+                    keyPressed = 'ArrowDown';
                     console.log('DOWN pressed');
-                    const event = new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true, cancelable: true});
-                    window.dispatchEvent(event);
+                } else {
+                    console.log('UP pressed - ignored');
                 }
+            }
+            
+            if(keyPressed) {
+                // Create keyboard event that matches actual keyboard input
+                const event = new KeyboardEvent('keydown', {
+                    key: keyPressed,
+                    code: keyPressed,
+                    keyCode: keyPressed === 'ArrowLeft' ? 37 : keyPressed === 'ArrowUp' ? 38 : keyPressed === 'ArrowRight' ? 39 : 40,
+                    bubbles: true,
+                    cancelable: true
+                });
+                document.dispatchEvent(event);
+                window.dispatchEvent(event);
             }
         }
         
