@@ -67,21 +67,63 @@
         <div class="phones">phones</div>
     </div>
     <script>
-        // D-Pad controls
+        // D-Pad controls - map to actual cross shape
         const dpad = document.getElementById('dpad');
         dpad.addEventListener('click', function(e) {
+            e.stopPropagation();
             const rect = dpad.getBoundingClientRect();
             const x = e.clientX - rect.left - rect.width/2;
             const y = e.clientY - rect.top - rect.height/2;
             
-            if(Math.abs(x) > Math.abs(y)) {
-                // Horizontal
-                if(x > 0) window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}));
-                else window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
+            // Determine which arm of the cross was clicked
+            const absX = Math.abs(x);
+            const absY = Math.abs(y);
+            
+            if(absX > absY) {
+                // Horizontal arm clicked
+                if(x > 0) {
+                    // Right
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}));
+                } else {
+                    // Left
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
+                }
             } else {
-                // Vertical
-                if(y > 0) window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
-                else window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
+                // Vertical arm clicked
+                if(y > 0) {
+                    // Down
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
+                } else {
+                    // Up
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
+                }
+            }
+        });
+        
+        // Touch support for D-pad
+        dpad.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const rect = dpad.getBoundingClientRect();
+            const touch = e.changedTouches[0];
+            const x = touch.clientX - rect.left - rect.width/2;
+            const y = touch.clientY - rect.top - rect.height/2;
+            
+            const absX = Math.abs(x);
+            const absY = Math.abs(y);
+            
+            if(absX > absY) {
+                if(x > 0) {
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}));
+                } else {
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
+                }
+            } else {
+                if(y > 0) {
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
+                } else {
+                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
+                }
             }
         });
         
@@ -93,6 +135,19 @@
             const x = e.clientX - rect.left;
             
             // Right button = A (rotate)
+            if(x > rect.width / 2) {
+                window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
+            }
+        });
+        
+        // Touch support for A/B
+        btnAB.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const rect = btnAB.getBoundingClientRect();
+            const touch = e.changedTouches[0];
+            const x = touch.clientX - rect.left;
+            
             if(x > rect.width / 2) {
                 window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
             }
