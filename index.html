@@ -24,11 +24,19 @@
             overflow: hidden;
         }
         
-        /* Make buttons clickable */
-        .btn-direction, .btn-AB, .btn-start-select {
+        /* Make buttons clickable with larger hit area */
+        .btn-direction, .btn-AB {
             cursor: pointer !important;
             user-select: none !important;
             z-index: 10 !important;
+        }
+        
+        .btn-start-select {
+            cursor: pointer !important;
+            user-select: none !important;
+            z-index: 10 !important;
+            /* Extend hit area to cover both ovals */
+            width: 120px !important;
         }
         
         /* Position canvas within screen */
@@ -133,12 +141,16 @@
         // Start/Select buttons - Start (right) pauses/resumes
         const btnStartSelect = document.getElementById('btnStartSelect');
         
-        function handleStartSelect(clientX) {
+        function handleStartSelect(clientX, clientY) {
             const rect = btnStartSelect.getBoundingClientRect();
             const x = clientX - rect.left;
+            const y = clientY - rect.top;
             
-            // START button is on the RIGHT
-            if(x > rect.width / 2) {
+            // Account for rotation (-25deg) and box-shadow offset (57px 27px)
+            // The right oval (START) is created by box-shadow at offset position
+            // Simple approach: if x > 50px, it's the right button (START)
+            if(x > 50) {
+                // START button (right oval) - starts or pauses/resumes
                 if(!window.gameStart) {
                     window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
                 } else {
@@ -149,14 +161,14 @@
         
         btnStartSelect.addEventListener('click', function(e) {
             e.stopPropagation();
-            handleStartSelect(e.clientX);
+            handleStartSelect(e.clientX, e.clientY);
         });
         
         btnStartSelect.addEventListener('touchend', function(e) {
             e.preventDefault();
             e.stopPropagation();
             const touch = e.changedTouches[0];
-            handleStartSelect(touch.clientX);
+            handleStartSelect(touch.clientX, touch.clientY);
         });
     </script>
 </body>
