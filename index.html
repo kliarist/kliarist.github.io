@@ -24,19 +24,11 @@
             overflow: hidden;
         }
         
-        /* Make buttons clickable with larger hit area */
-        .btn-direction, .btn-AB {
+        /* Make buttons clickable */
+        .btn-direction, .btn-AB, .btn-start-select {
             cursor: pointer !important;
             user-select: none !important;
             z-index: 10 !important;
-        }
-        
-        .btn-start-select {
-            cursor: pointer !important;
-            user-select: none !important;
-            z-index: 10 !important;
-            /* Extend hit area to cover both ovals */
-            width: 120px !important;
         }
         
         /* Position canvas within screen */
@@ -75,6 +67,8 @@
         <div class="phones">phones</div>
     </div>
     <script>
+        console.log('Button controls loaded');
+        
         // D-Pad controls - only left/right/down for movement
         const dpad = document.getElementById('dpad');
         
@@ -83,26 +77,35 @@
             const x = clientX - rect.left - rect.width/2;
             const y = clientY - rect.top - rect.height/2;
             
+            console.log('D-pad clicked:', {x, y, absX: Math.abs(x), absY: Math.abs(y)});
+            
             const absX = Math.abs(x);
             const absY = Math.abs(y);
             
             if(absX > absY) {
                 // Horizontal
                 if(x > 0) {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}));
+                    console.log('RIGHT pressed');
+                    const event = new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true, cancelable: true});
+                    window.dispatchEvent(event);
                 } else {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
+                    console.log('LEFT pressed');
+                    const event = new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true, cancelable: true});
+                    window.dispatchEvent(event);
                 }
             } else {
-                // Vertical - only down, up does nothing (A button rotates)
+                // Vertical - only down
                 if(y > 0) {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
+                    console.log('DOWN pressed');
+                    const event = new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true, cancelable: true});
+                    window.dispatchEvent(event);
                 }
             }
         }
         
         dpad.addEventListener('click', function(e) {
             e.stopPropagation();
+            console.log('D-pad click event');
             handleDpad(e.clientX, e.clientY);
         });
         
@@ -120,9 +123,13 @@
             const rect = btnAB.getBoundingClientRect();
             const x = clientX - rect.left;
             
+            console.log('A/B clicked, x:', x, 'width:', rect.width);
+            
             // A button is on the RIGHT (visually on Game Boy)
             if(x > rect.width / 2) {
-                window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}));
+                console.log('A button (rotate) pressed');
+                const event = new KeyboardEvent('keydown', {key: 'ArrowUp', bubbles: true, cancelable: true});
+                window.dispatchEvent(event);
             }
         }
         
@@ -138,7 +145,7 @@
             handleAB(touch.clientX);
         });
         
-        // Start/Select buttons - Start (right) pauses/resumes
+        // Start/Select buttons
         const btnStartSelect = document.getElementById('btnStartSelect');
         
         function handleStartSelect(clientX, clientY) {
@@ -146,15 +153,18 @@
             const x = clientX - rect.left;
             const y = clientY - rect.top;
             
-            // Account for rotation (-25deg) and box-shadow offset (57px 27px)
-            // The right oval (START) is created by box-shadow at offset position
-            // Simple approach: if x > 50px, it's the right button (START)
+            console.log('Start/Select clicked, x:', x, 'y:', y);
+            
+            // The right oval (START) is at box-shadow offset 57px 27px
+            // Simple: if x > 50, it's likely the right button
             if(x > 50) {
-                // START button (right oval) - starts or pauses/resumes
+                console.log('START button pressed');
                 if(!window.gameStart) {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+                    const event = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true});
+                    window.dispatchEvent(event);
                 } else {
-                    window.dispatchEvent(new KeyboardEvent('keydown', {key: ' '}));
+                    const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
+                    window.dispatchEvent(event);
                 }
             }
         }
