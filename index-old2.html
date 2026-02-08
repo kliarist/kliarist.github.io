@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Boy Tetris</title>
+    <link rel="stylesheet" href="gameboy.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+    <script src="./p5.sound.min.js"></script>
+    <script src="./Randomiser.js"></script>
+    <script src="./main.js"></script>
+    <script src="./controls.js"></script>
+    <script src="./display_ui.js"></script>
+    <script src="./script.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Make buttons clickable */
+        .btn-direction, .btn-AB {
+            cursor: pointer !important;
+            user-select: none !important;
+            z-index: 10 !important;
+        }
+        
+        /* Position canvas within screen */
+        .gameboy .screen-cont .screen canvas {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            width: auto !important;
+            height: auto !important;
+            image-rendering: pixelated !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="gameboy">
+        <div class="screen-cont">
+            <div class="power power-on"></div>
+            <div class="screen">
+                <div class="header">DOT MATRIX WITH STEREO SOUND</div>
+                <!-- Canvas will be injected here by p5.js -->
+            </div>
+        </div>
+        <div class="controls-cont">
+            <div class="btn-direction" id="dpad">
+                <div class="vertical"></div>
+                <div class="horizontal"></div>
+            </div>
+            <div class="btn-AB" id="btnAB"></div>
+            <div class="btn-start-select"></div>
+            <!-- Separate clickable areas for start/select -->
+            <div id="btnSelect" style="position: absolute; top: 205px; left: 140px; width: 70px; height: 25px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
+            <div id="btnStart" style="position: absolute; top: 218px; left: 185px; width: 70px; height: 25px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
+        </div>
+        <div class="speakers"></div>
+        <div class="on-off">< off-on ></div>
+        <div class="phones">phones</div>
+    </div>
+    <script>
+        // D-Pad controls
+        const dpad = document.getElementById('dpad');
+        
+        // D-Pad controls - call game functions directly instead of dispatching events
+        function handleDpad(clientX, clientY) {
+            const rect = dpad.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const x = clientX - centerX;
+            const y = clientY - centerY;
+            
+            const absX = Math.abs(x);
+            const absY = Math.abs(y);
+            
+            // Call game functions directly
+            if(absX > absY) {
+                // Horizontal
+                if(x > 0) {
+                    // Right
+                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
+                        if(checkifPossible(currentBlock, 0, 1)) {
+                            leftOff = (leftOff + 1) % 11;
+                            setTempBlock();
+                        }
+                    }
+                } else {
+                    // Left
+                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
+                        if(checkifPossible(currentBlock, 0, -1)) {
+                            leftOff = (leftOff - 1) % 11;
+                            setTempBlock();
+                        }
+                    }
+                }
+            } else {
+                // Vertical - only down
+                if(y > 0) {
+                    // Down
+                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
+                        if(checkifPossible(currentBlock, 1, 0)) {
+                            topOff = (topOff + 1) % 20;
+                            score++;
+                            setTempBlock();
+                        }
+                    }
+                }
+            }
+        }
+        
+        dpad.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            handleDpad(e.clientX, e.clientY);
+        });
+        
+        dpad.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const touch = e.changedTouches[0];
+            handleDpad(touch.clientX, touch.clientY);
+        });
+        
+        // A/B buttons - A (right) rotates
+        const btnAB = document.getElementById('btnAB');
+        
+        function handleAB(clientX) {
+            const rect = btnAB.getBoundingClientRect();
+            const x = clientX - rect.left;
+            
+            console.log('A/B clicked, x:', x, 'width:', rect.width);
+            
+            // A button is on the RIGHT (visually on Game Boy)
+            if(x > rect.width / 2) {
+                console.log('A button (rotate) pressed');
+                const event = new KeyboardEvent('keydown', {key: 'ArrowUp', bubbles: true, cancelable: true});
+                window.dispatchEvent(event);
+            }
+        }
+        
+        btnAB.addEventListener('click', function(e) {
+            e.stopPropagation();
+            handleAB(e.clientX);
+        });
+        
+        btnAB.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const touch = e.changedTouches[0];
+            handleAB(touch.clientX);
+        });
+        
+        // Start and Select as separate buttons
+        const btnStart = document.getElementById('btnStart');
+        const btnSelect = document.getElementById('btnSelect');
+        
+        btnStart.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if(!window.gameStart) {
+                gameStart = true;
+                window.gameStart = true;
+            } else {
+                gameOver = !gameOver;
+                setTempBlock();
+                playPauseMusic();
+            }
+        });
+        
+        btnStart.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if(!window.gameStart) {
+                gameStart = true;
+                window.gameStart = true;
+            } else {
+                gameOver = !gameOver;
+                setTempBlock();
+                playPauseMusic();
+            }
+        });
+        
+        btnSelect.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // SELECT does nothing
+        });
+    </script>
+</body>
+</html>

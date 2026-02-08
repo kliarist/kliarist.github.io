@@ -51,7 +51,6 @@
             <div class="power power-on"></div>
             <div class="screen">
                 <div class="header">DOT MATRIX WITH STEREO SOUND</div>
-                <!-- Canvas will be injected here by p5.js -->
             </div>
         </div>
         <div class="controls-cont">
@@ -61,7 +60,6 @@
             </div>
             <div class="btn-AB" id="btnAB"></div>
             <div class="btn-start-select"></div>
-            <!-- Separate clickable areas for start/select -->
             <div id="btnSelect" style="position: absolute; top: 205px; left: 140px; width: 70px; height: 25px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
             <div id="btnStart" style="position: absolute; top: 218px; left: 185px; width: 70px; height: 25px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
         </div>
@@ -70,130 +68,64 @@
         <div class="phones">phones</div>
     </div>
     <script>
-        // D-Pad controls
-        const dpad = document.getElementById('dpad');
-        
-        // D-Pad controls - call game functions directly instead of dispatching events
-        function handleDpad(clientX, clientY) {
-            const rect = dpad.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+        window.addEventListener('load', function() {
+            const dpad = document.getElementById('dpad');
+            const btnAB = document.getElementById('btnAB');
+            const btnStart = document.getElementById('btnStart');
             
-            const x = clientX - centerX;
-            const y = clientY - centerY;
+            function pressKey(key) {
+                window.dispatchEvent(new KeyboardEvent('keydown', {key: key}));
+            }
             
-            const absX = Math.abs(x);
-            const absY = Math.abs(y);
-            
-            // Call game functions directly
-            if(absX > absY) {
-                // Horizontal
-                if(x > 0) {
-                    // Right
-                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
-                        if(checkifPossible(currentBlock, 0, 1)) {
-                            leftOff = (leftOff + 1) % 11;
-                            setTempBlock();
-                        }
-                    }
-                } else {
-                    // Left
-                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
-                        if(checkifPossible(currentBlock, 0, -1)) {
-                            leftOff = (leftOff - 1) % 11;
-                            setTempBlock();
-                        }
-                    }
+            // D-Pad
+            dpad.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = dpad.getBoundingClientRect();
+                const x = touch.clientX - (rect.left + rect.width/2);
+                const y = touch.clientY - (rect.top + rect.height/2);
+                
+                if(Math.abs(x) > Math.abs(y)) {
+                    pressKey(x > 0 ? 'ArrowRight' : 'ArrowLeft');
+                } else if(y > 0) {
+                    pressKey('ArrowDown');
                 }
-            } else {
-                // Vertical - only down
-                if(y > 0) {
-                    // Down
-                    if(typeof checkifPossible !== 'undefined' && typeof currentBlock !== 'undefined') {
-                        if(checkifPossible(currentBlock, 1, 0)) {
-                            topOff = (topOff + 1) % 20;
-                            score++;
-                            setTempBlock();
-                        }
-                    }
+            });
+            
+            dpad.addEventListener('click', function(e) {
+                const rect = dpad.getBoundingClientRect();
+                const x = e.clientX - (rect.left + rect.width/2);
+                const y = e.clientY - (rect.top + rect.height/2);
+                
+                if(Math.abs(x) > Math.abs(y)) {
+                    pressKey(x > 0 ? 'ArrowRight' : 'ArrowLeft');
+                } else if(y > 0) {
+                    pressKey('ArrowDown');
                 }
-            }
-        }
-        
-        dpad.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            handleDpad(e.clientX, e.clientY);
-        });
-        
-        dpad.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const touch = e.changedTouches[0];
-            handleDpad(touch.clientX, touch.clientY);
-        });
-        
-        // A/B buttons - A (right) rotates
-        const btnAB = document.getElementById('btnAB');
-        
-        function handleAB(clientX) {
-            const rect = btnAB.getBoundingClientRect();
-            const x = clientX - rect.left;
+            });
             
-            console.log('A/B clicked, x:', x, 'width:', rect.width);
+            // A Button
+            btnAB.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = btnAB.getBoundingClientRect();
+                if(touch.clientX - rect.left > rect.width/2) pressKey('ArrowUp');
+            });
             
-            // A button is on the RIGHT (visually on Game Boy)
-            if(x > rect.width / 2) {
-                console.log('A button (rotate) pressed');
-                const event = new KeyboardEvent('keydown', {key: 'ArrowUp', bubbles: true, cancelable: true});
-                window.dispatchEvent(event);
-            }
-        }
-        
-        btnAB.addEventListener('click', function(e) {
-            e.stopPropagation();
-            handleAB(e.clientX);
-        });
-        
-        btnAB.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const touch = e.changedTouches[0];
-            handleAB(touch.clientX);
-        });
-        
-        // Start and Select as separate buttons
-        const btnStart = document.getElementById('btnStart');
-        const btnSelect = document.getElementById('btnSelect');
-        
-        btnStart.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if(!window.gameStart) {
-                gameStart = true;
-                window.gameStart = true;
-            } else {
-                gameOver = !gameOver;
-                setTempBlock();
-                playPauseMusic();
-            }
-        });
-        
-        btnStart.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if(!window.gameStart) {
-                gameStart = true;
-                window.gameStart = true;
-            } else {
-                gameOver = !gameOver;
-                setTempBlock();
-                playPauseMusic();
-            }
-        });
-        
-        btnSelect.addEventListener('click', function(e) {
-            e.stopPropagation();
-            // SELECT does nothing
+            btnAB.addEventListener('click', function(e) {
+                const rect = btnAB.getBoundingClientRect();
+                if(e.clientX - rect.left > rect.width/2) pressKey('ArrowUp');
+            });
+            
+            // START Button
+            btnStart.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                pressKey(window.gameStart ? ' ' : 'Enter');
+            });
+            
+            btnStart.addEventListener('click', function(e) {
+                pressKey(window.gameStart ? ' ' : 'Enter');
+            });
         });
     </script>
 </body>
