@@ -154,10 +154,9 @@
             
             console.log('Start/Select clicked, x:', x, 'rect.width:', rect.width, 'midpoint:', rect.width/2);
             
-            // Bounding rect includes both ovals
-            // Right half = START button, Left half = SELECT button
-            if(x > rect.width / 2) {
-                console.log('START button (RIGHT) pressed');
+            // REVERSED LOGIC - testing if opposite is correct
+            if(x < rect.width / 2) {
+                console.log('TESTING: This side triggers START');
                 if(!window.gameStart) {
                     const event = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true});
                     window.dispatchEvent(event);
@@ -166,7 +165,7 @@
                     window.dispatchEvent(event);
                 }
             } else {
-                console.log('SELECT button (LEFT) pressed - ignored');
+                console.log('TESTING: This side ignored');
             }
         }
         
