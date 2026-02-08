@@ -91,13 +91,13 @@
             let keyPressed = null;
             
             if(absX > absY) {
-                // Horizontal
+                // Horizontal - SWAPPED
                 if(x > 0) {
-                    keyPressed = 'ArrowRight';
-                    console.log('RIGHT pressed');
-                } else {
                     keyPressed = 'ArrowLeft';
-                    console.log('LEFT pressed');
+                    console.log('LEFT pressed (right side clicked)');
+                } else {
+                    keyPressed = 'ArrowRight';
+                    console.log('RIGHT pressed (left side clicked)');
                 }
             } else {
                 // Vertical - only down works
