@@ -25,10 +25,19 @@
         }
         
         /* Make buttons clickable */
-        .btn-direction, .btn-AB, .btn-start-select {
+        .btn-direction, .btn-AB {
             cursor: pointer !important;
             user-select: none !important;
             z-index: 10 !important;
+        }
+        
+        .btn-start-select {
+            cursor: pointer !important;
+            user-select: none !important;
+            z-index: 10 !important;
+            /* Extend clickable area to cover both ovals */
+            width: 120px !important;
+            height: 50px !important;
         }
         
         /* Position canvas within screen */
@@ -152,11 +161,12 @@
             const rect = btnStartSelect.getBoundingClientRect();
             const x = clientX - rect.left;
             
-            console.log('Start/Select clicked, x:', x, 'rect.width:', rect.width, 'midpoint:', rect.width/2);
+            console.log('Start/Select clicked, x:', x, 'rect.width:', rect.width);
             
-            // REVERSED LOGIC - testing if opposite is correct
-            if(x < rect.width / 2) {
-                console.log('TESTING: This side triggers START');
+            // Extended to 120px width to cover both ovals
+            // Right oval (START) is at approximately x > 70
+            if(x > 70) {
+                console.log('RIGHT button (START) pressed');
                 if(!window.gameStart) {
                     const event = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true});
                     window.dispatchEvent(event);
@@ -165,7 +175,7 @@
                     window.dispatchEvent(event);
                 }
             } else {
-                console.log('TESTING: This side ignored');
+                console.log('LEFT button (SELECT) pressed - ignored');
             }
         }
         
