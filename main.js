@@ -105,6 +105,8 @@ let fullRow=0;
 for(let i=1;i<11;i++){
     if(staticGrid[1][i]){
         gameOver=true
+        gameStart=false
+        window.gameStart=false
     }
 }
    staticGrid = staticGrid.filter( (st,ind) => {
