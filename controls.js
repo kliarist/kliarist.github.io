@@ -47,6 +47,7 @@ window.addEventListener("keydown",
     }
     else if(event.key ==="Enter"){
         gameStart = true;
+        window.gameStart = true;
     }
 })
 const checkifPossible=(cb,xoff,yoff)=>{

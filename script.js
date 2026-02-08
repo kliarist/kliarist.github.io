@@ -1,6 +1,7 @@
 let i_img,j_img,l_img,o_img,s_img,t_img,z_img;
 let x_Off=1,y_off=2
 let gameStart = false;
+window.gameStart = false; // Make accessible to button handlers
 let themeSongPlay = false;
 let gameOver=false
 let boxSide = null;
