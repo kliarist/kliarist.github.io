@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Game Boy Tetris</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="gameboy">
+        <div class="gameboy-body">
+            <!-- Top Section -->
+            <div class="top-section">
+                <div class="logo">GAME BOY</div>
+            </div>
+
+            <!-- Screen Section -->
+            <div class="screen-container">
+                <div class="screen-border">
+                    <div class="screen">
+                        <canvas id="gameCanvas" width="416" height="288"></canvas>
+                        <div id="gameOver" class="game-over hidden">
+                            <div class="game-over-text">GAME OVER</div>
+                            <div class="game-over-restart">Press START</div>
+                        </div>
+                        <div id="gamePaused" class="game-paused hidden">
+                            <div class="game-paused-text">PAUSED</div>
+                        </div>
+                    </div>
+                    <div class="screen-label">DOT MATRIX WITH STEREO SOUND</div>
+                </div>
+            </div>
+
+            <!-- Nintendo Branding -->
+            <div class="nintendo-section">
+                <div class="nintendo-logo">Nintendo</div>
+                <div class="trademark">GAME BOY™</div>
+            </div>
+
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <!-- D-Pad -->
+                <div class="dpad-container">
+                    <div class="dpad">
+                        <button class="dpad-btn dpad-up" data-key="up">
+                            <span>▲</span>
+                        </button>
+                        <button class="dpad-btn dpad-left" data-key="left">
+                            <span>◀</span>
+                        </button>
+                        <button class="dpad-btn dpad-center"></button>
+                        <button class="dpad-btn dpad-right" data-key="right">
+                            <span>▶</span>
+                        </button>
+                        <button class="dpad-btn dpad-down" data-key="down">
+                            <span>▼</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <div class="ab-buttons">
+                        <div class="button-group">
+                            <button class="action-btn btn-b" data-key="b">B</button>
+                            <div class="btn-label">ROTATE</div>
+                        </div>
+                        <div class="button-group">
+                            <button class="action-btn btn-a" data-key="a">A</button>
+                            <div class="btn-label">ROTATE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start/Select Buttons -->
+            <div class="start-select">
+                <button class="ss-btn" data-key="select">
+                    <span>SELECT</span>
+                    <div class="sound-indicator">🔊</div>
+                </button>
+                <button class="ss-btn" data-key="start">
+                    <span>START</span>
+                </button>
+            </div>
+
+            <!-- Speaker Grills -->
+            <div class="speaker">
+                <div class="speaker-grill"></div>
+                <div class="speaker-grill"></div>
+                <div class="speaker-grill"></div>
+                <div class="speaker-grill"></div>
+                <div class="speaker-grill"></div>
+                <div class="speaker-grill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="tetris.js"></script>
+</body>
+</html>

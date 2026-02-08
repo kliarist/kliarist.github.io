@@ -1,0 +1,11 @@
+COMPLETE REBUILD PLAN - Match Reference Exactly
+
+Current issues:
+1. Using plain canvas/JS instead of p5.js
+2. Fixed size instead of responsive full-screen
+3. Manual text drawing instead of score_board.svg overlay
+4. Different game loop structure
+5. No title screen
+6. Different proportions and spacing
+
+Solution: Rebuild using p5.js to match reference structure
