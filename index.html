@@ -112,8 +112,27 @@
             btnRight.addEventListener('touchstart', function(e) { e.preventDefault(); pressKey('ArrowRight'); });
             btnRight.addEventListener('click', function(e) { e.preventDefault(); pressKey('ArrowRight'); });
             
-            btnDown.addEventListener('touchstart', function(e) { e.preventDefault(); pressKey('ArrowDown'); });
-            btnDown.addEventListener('click', function(e) { e.preventDefault(); pressKey('ArrowDown'); });
+            // DOWN button - hold to repeat like keyboard
+            let downInterval = null;
+            btnDown.addEventListener('touchstart', function(e) { 
+                e.preventDefault(); 
+                pressKey('ArrowDown');
+                // Repeat while holding
+                downInterval = setInterval(function() {
+                    pressKey('ArrowDown');
+                }, 50); // Repeat every 50ms
+            });
+            btnDown.addEventListener('touchend', function(e) { 
+                e.preventDefault(); 
+                if(downInterval) {
+                    clearInterval(downInterval);
+                    downInterval = null;
+                }
+            });
+            btnDown.addEventListener('click', function(e) { 
+                e.preventDefault(); 
+                pressKey('ArrowDown'); 
+            });
             
             btnUp.addEventListener('touchstart', function(e) { e.preventDefault(); });
             btnUp.addEventListener('click', function(e) { e.preventDefault(); });
