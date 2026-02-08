@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Boy Tetris</title>
+    <link rel="stylesheet" href="gameboy.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+    <script src="./p5.sound.min.js" defer></script>
+    <script src="./script.js" defer></script>
+    <script src="./Randomiser.js"></script>
+    <script src="./main.js"></script>
+    <script src="./controls.js"></script>
+    <script src="./display_ui.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #09cbe4;
+        }
+        
+        .gameboy {
+            width: 700px !important;
+            height: 1100px !important;
+            transform-origin: center;
+        }
+        
+        .gameboy .screen-cont {
+            width: 600px !important;
+            height: 500px !important;
+            left: 50px !important;
+        }
+        
+        .gameboy .screen-cont .screen {
+            width: 100% !important;
+            height: 100% !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .animated-text {
+            display: none !important;
+        }
+        
+        @media (max-height: 1150px) {
+            .gameboy {
+                transform: scale(0.85);
+            }
+        }
+        
+        @media (max-height: 1000px) {
+            .gameboy {
+                transform: scale(0.7);
+            }
+        }
+        
+        @media (max-width: 750px) {
+            .gameboy {
+                transform: scale(0.55);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gameboy">
+        <div class="screen-cont">
+            <div class="power"></div>
+            <div class="screen">
+                <div class="header">DOT MATRIX WITH STEREO SOUND</div>
+            </div>
+        </div>
+        <div class="controls-cont">
+            <div class="btn-direction">
+                <div class="vertical"></div>
+                <div class="horizontal"></div>
+            </div>
+            <div class="btn-AB"></div>
+            <div class="btn-start-select"></div>
+        </div>
+        <div class="speakers"></div>
+        <div class="on-off">< off-on ></div>
+        <div class="phones">phones</div>
+    </div>
+</body>
+</html>
