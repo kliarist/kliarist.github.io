@@ -11,7 +11,8 @@ function preload(){
 }
 
 function setup() {
-    createCanvas(windowHeight*(10/9),windowHeight)
+    let cnv = createCanvas(windowHeight*(10/9),windowHeight);
+    cnv.parent(document.querySelector('.gameboy .screen'));
     boxSide = floor(windowHeight/18)
     px = boxSide/8
     RandomiserInit()
