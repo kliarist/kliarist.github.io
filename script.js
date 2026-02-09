@@ -90,7 +90,7 @@ function titleScreen(){
       fill(black);
       textFont(RetroFont);
       textSize(px*8);
-      text("Press Enter to Start", px*8, px*121);
+      text("Press START to Play", px*8, px*121);
       pop()
     }
   pop()

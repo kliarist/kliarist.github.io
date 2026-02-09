@@ -178,8 +178,8 @@ input.btn-hide {
 .gameboy .controls-cont .btn-direction .horizontal {
   position: absolute;
   left: 30px;
-  width: 30px;
-  height: 90px;
+  width: 40px;
+  height: 110px;
   background: #444;
   border-radius: 5px;
 }
@@ -187,8 +187,8 @@ input.btn-hide {
 .gameboy .controls-cont .btn-direction .horizontal:before {
   content: "";
   position: relative;
-  top: 99px;
-  left: 8px;
+  top: 118px;
+  left: 13px;
   width: 0;
   height: 0;
   border-left: 7px solid transparent;
@@ -200,7 +200,7 @@ input.btn-hide {
   content: "";
   position: relative;
   top: -27px;
-  left: -5.6px;
+  left: -0.6px;
   width: 0;
   height: 0;
   border-left: 7px solid transparent;
