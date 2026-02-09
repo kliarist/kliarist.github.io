@@ -11,6 +11,16 @@ window.addEventListener("keydown",
             topOff = (topOff+1)%20
             score++;
             setTempBlock()
+        } else {
+            // Block can't move down, place it immediately
+            setCurrentBlock(topOff,leftOff)
+            randomclock = (randomclock+1)%7
+            setRandomiser()
+            Holdpressed=false
+            topOff=1;
+            leftOff=4;
+            setTempBlock()
+            checkRow()
         }
     }
     else if(event.key=== "ArrowLeft"){
