@@ -78,6 +78,10 @@ function titleScreen(){
       text("GAME OVER", width/2, px*70);
       textSize(px*8);
       text("Score: " + score, width/2, px*85);
+      pop()
+      push()
+      fill(black);
+      textFont(RetroFont);
       textSize(px*8);
       text("Press START to Play", px*8, px*121);
       pop()
