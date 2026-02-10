@@ -1,15 +1,15 @@
-# 🎮 Retro Boy Tetris & Emulator
+# 🎮 RetroBoy Tetris & Emulator
 
 **Remember the good old days?** Now you can relive them right in your browser! 
 
-This project features both a custom-built Tetris game and a full Retro Boy emulator, all wrapped in an authentic Nintendo Retro Boy console interface that works on both desktop and mobile devices.
+This project features both a custom-built Tetris game and a full RetroBoy emulator, all wrapped in an authentic Nintendo RetroBoy console interface that works on both desktop and mobile devices.
 
-![Retro Boy Tetris Screenshot](screenshot.png)
+![RetroBoy Tetris Screenshot](screenshot.png)
 
 ## ✨ Features
 
 ### Tetris Mode
-- 🕹️ **Authentic Retro Boy UI** - Complete with D-pad, A/B buttons, and Start/Select controls
+- 🕹️ **Authentic RetroBoy UI** - Complete with D-pad, A/B buttons, and Start/Select controls
 - 📱 **Mobile-Friendly** - Touch controls that work perfectly on phones and tablets
 - 🎵 **Classic Tetris Music** - The iconic theme song that'll get stuck in your head
 - 🎨 **Pixel-Perfect Graphics** - Just like you remember from 1989
@@ -17,7 +17,7 @@ This project features both a custom-built Tetris game and a full Retro Boy emula
 - 🏆 **Score Tracking** - Compete with yourself for the highest score
 
 ### Emulator Mode
-- 🎮 **Full Retro Boy Emulator** - Play any Retro Boy ROM
+- 🎮 **Full RetroBoy Emulator** - Play any RetroBoy ROM
 - 💾 **Save States** - Save and load your progress in browser
 - 🎵 **Audio Support** - Full sound emulation
 - 📁 **ROM Upload** - Load your own legal ROMs
@@ -46,32 +46,32 @@ This project features both a custom-built Tetris game and a full Retro Boy emula
 **[Click here to play!](https://kliarist.github.io/)**
 
 - **Tetris Mode**: Instant play, no setup required
-- **Emulator Mode**: Upload your own Retro Boy ROMs
+- **Emulator Mode**: Upload your own RetroBoy ROMs
 
 ## 🛠️ Tech Stack
 
 - Pure JavaScript (no frameworks!)
 - p5.js for graphics rendering
 - p5.sound for audio playback
-- CSS3 for the Retro Boy console design
-- Retro Boy emulator core (GameBoyCore.js)
+- CSS3 for the RetroBoy console design
+- RetroBoy emulator core (GameBoyCore.js)
 
 ## 📁 Project Structure
 
 ```
 retris/
 ├── index.html          # Tetris game (main page)
-├── emulator.html       # Retro Boy emulator
+├── emulator.html       # RetroBoy emulator
 ├── js/
 │   ├── game/          # Tetris game files
 │   ├── emulator/      # Emulator core files
 │   └── p5.sound.min.js
 ├── css/
-│   ├── gameboy.css    # Retro Boy console styling
+│   ├── gameboy.css    # RetroBoy console styling
 │   ├── common.css     # Shared styles
 │   └── emulator.css   # Emulator-specific styles
 ├── assets/            # Images, audio, fonts
-└── roms/              # Sample Retro Boy ROMs
+└── roms/              # Sample RetroBoy ROMs
 
 ```
 
@@ -85,7 +85,7 @@ Classic Tetris rules apply:
 
 ## 📝 Credits
 
-Inspired by the original Retro Boy Tetris (1989) and built with love for retro gaming enthusiasts.
+Inspired by the original RetroBoy Tetris (1989) and built with love for retro gaming enthusiasts.
 
 ---
 

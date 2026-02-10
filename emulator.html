@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Boy Emulator</title>
+    <title>RetroBoy Emulator</title>
     <link rel="stylesheet" href="css/gameboy.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/emulator.css">
@@ -20,10 +20,10 @@
                 
                 <!-- ROM Loader Interface -->
                 <div id="rom-loader">
-                    <h2>🎮 Retro Boy Emulator</h2>
+                    <h2>🎮 RetroBoy Emulator</h2>
                     <label for="rom-file">Upload ROM File</label>
                     <input type="file" id="rom-file" accept=".gb,.gbc">
-                    <div id="status">Select a Retro Boy ROM file (.gb or .gbc)</div>
+                    <div id="status">Select a RetroBoy ROM file (.gb or .gbc)</div>
                 </div>
                 
                 <!-- Emulator Canvas -->
@@ -126,7 +126,7 @@
             [7]: { keyboard: false, screen: false }   // START
         };
         
-        // Retro Boy button mapping
+        // RetroBoy button mapping
         const GB_BUTTONS = {
             RIGHT: 0,
             LEFT: 1,
@@ -635,7 +635,7 @@
                 canvas.classList.remove('loaded');
                 
                 document.getElementById('rom-loader').style.display = 'block';
-                document.getElementById('status').textContent = 'Select a Retro Boy ROM file (.gb or .gbc)';
+                document.getElementById('status').textContent = 'Select a RetroBoy ROM file (.gb or .gbc)';
                 document.getElementById('rom-file').value = '';
             }
         }
