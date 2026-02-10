@@ -78,8 +78,8 @@ function titleScreen(){
       text("GAME OVER", width/2, px*70);
       textSize(px*8);
       text("Score: " + score, width/2, px*85);
-      textSize(px*7);
-      text("Press START to Play Again", width/2, px*115);
+      textSize(px*8);
+      text("Press START to Play", px*8, px*121);
       pop()
     } else {
       image(title_screen_img,0,0,width,height)
