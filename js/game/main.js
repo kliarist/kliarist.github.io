@@ -67,38 +67,35 @@ const setTempBlock = ()=>{
 }
 
 const updateGrid=()=>{
-    let isFree = true
     clearGrid()
+    
+    // Check if block can move down
+    let canMoveDown = true;
     for(let i=0;i<4;i++){
         for(let j=0;j<4;j++){
-            if(currentBlock[i][j] &&  staticGrid[i+topOff][j+leftOff]){
-                setCurrentBlock(topOff-1,leftOff)
-                randomclock = (randomclock+1)%7
-                setRandomiser()
-                isFree= false
-                Holdpressed=false
-                topOff=1;
-                leftOff=3;
-                setTempBlock()
-                break
+            if(currentBlock[i][j]){
+                // Check if next position would collide
+                if(staticGrid[i+topOff+1] && staticGrid[i+topOff+1][j+leftOff]){
+                    canMoveDown = false;
+                    break;
+                }
             }
         }
-        if(!isFree) break;
+        if(!canMoveDown) break;
     }
-    if(isFree){
-        if(topOff<19){
-            topOff++;
-        }
-        else{
-            setCurrentBlock(topOff,leftOff)
-            randomclock = (randomclock+1)%7
-            setRandomiser()
-            Holdpressed=false
-            topOff=1;
-            leftOff=3;
-        }
+    
+    if(canMoveDown && topOff < 18){
+        topOff++;
+    } else {
+        // Place the block
+        setCurrentBlock(topOff,leftOff)
+        randomclock = (randomclock+1)%7
+        setRandomiser()
+        Holdpressed=false
+        topOff=1;
+        leftOff=3;
+        setTempBlock()
     }
-
 }
 
 const checkRow =()=>{
