@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Boy Emulator</title>
+    <link rel="stylesheet" href="gameboy.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Position canvas within screen */
+        .gameboy .screen-cont .screen canvas {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 100% !important;
+            height: 100% !important;
+            image-rendering: pixelated !important;
+            image-rendering: crisp-edges !important;
+        }
+        
+        /* Make buttons more responsive */
+        .btn-AB {
+            transition: transform 0.05s ease !important;
+            cursor: pointer !important;
+            touch-action: none !important;
+        }
+        
+        .btn-AB:active {
+            transform: rotate(-25deg) scale(0.95) !important;
+        }
+        
+        #btnUp, #btnDown, #btnLeft, #btnRight {
+            transition: opacity 0.05s ease;
+            touch-action: none !important;
+        }
+        
+        #btnUp:active, #btnDown:active, #btnLeft:active, #btnRight:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Enable multi-touch for game controls */
+        .controls-cont {
+            touch-action: none !important;
+        }
+        
+        body {
+            touch-action: pan-x pan-y !important;
+        }
+        
+        /* ROM Upload Interface */
+        #rom-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #000;
+            font-family: Arial, sans-serif;
+            z-index: 1000;
+        }
+        
+        #rom-loader h2 {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        #rom-loader input[type="file"] {
+            display: none;
+        }
+        
+        #rom-loader label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #5a1f7d;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        #rom-loader label:hover {
+            background: #7a2fa0;
+        }
+        
+        #status {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        #mainCanvas {
+            display: none;
+        }
+        
+        #mainCanvas.loaded {
+            display: block;
+        }
+        
+        /* Start overlay for sound initialization */
+        #start-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        #start-overlay.active {
+            display: flex;
+        }
+        
+        #start-overlay.hidden {
+            display: none !important;
+            pointer-events: none !important;
+        }
+        
+        #start-overlay h2 {
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-align: center;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        #start-overlay p {
+            color: #ccc;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Ensure screen container is positioned */
+        .gameboy .screen-cont .screen {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="gameboy">
+        <div class="screen-cont">
+            <div class="power power-on" id="power-button" style="cursor: pointer;" title="Click to power off"></div>
+            <div class="screen">
+                <div class="header">DOT MATRIX WITH STEREO SOUND</div>
+                
+                <!-- ROM Loader Interface -->
+                <div id="rom-loader">
+                    <h2>🎮 Game Boy Emulator</h2>
+                    <label for="rom-file">Upload ROM File</label>
+                    <input type="file" id="rom-file" accept=".gb,.gbc">
+                    <div id="status">Select a Game Boy ROM file (.gb or .gbc)</div>
+                </div>
+                
+                <!-- Emulator Canvas -->
+                <canvas id="mainCanvas" width="160" height="144"></canvas>
+                
+                <!-- Start Overlay for Sound Initialization -->
+                <div id="start-overlay">
+                    <h2>🔊 Click to Enable Sound</h2>
+                    <p>Tap here to start audio</p>
+                </div>
+            </div>
+        </div>
+        <div class="controls-cont">
+            <div class="btn-direction" id="dpad">
+                <div class="vertical"></div>
+                <div class="horizontal"></div>
+            </div>
+            <!-- Invisible directional buttons overlaid on D-pad -->
+            <div id="btnUp" style="position: absolute; top: 60px; left: 65px; width: 40px; height: 40px; z-index: 200; cursor: pointer;"></div>
+            <div id="btnDown" style="position: absolute; top: 140px; left: 65px; width: 40px; height: 40px; z-index: 200; cursor: pointer;"></div>
+            <div id="btnLeft" style="position: absolute; top: 105px; left: 35px; width: 40px; height: 40px; z-index: 200; cursor: pointer;"></div>
+            <div id="btnRight" style="position: absolute; top: 105px; left: 105px; width: 40px; height: 40px; z-index: 200; cursor: pointer;"></div>
+            
+            <div class="btn-AB" id="btnAB"></div>
+            <div class="btn-start-select"></div>
+            <div id="btnSelect" style="position: absolute; top: 205px; left: 140px; width: 70px; height: 25px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
+            <div id="btnStart" style="position: absolute; top: 218px; left: 185px; width: 70px; height: 25px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
+            
+            <!-- Button Labels -->
+            <div style="position: absolute; top: 223px; left: 160px; font-size: 10px; font-weight: bold; color: #5a1f7d; transform: rotate(-25deg); pointer-events: none; z-index: 50;">SELECT</div>
+            <div style="position: absolute; top: 226px; left: 220px; font-size: 10px; font-weight: bold; color: #5a1f7d; transform: rotate(-25deg); pointer-events: none; z-index: 50;">START</div>
+            
+            <!-- A/B Button Labels -->
+            <div style="position: absolute; top: 135px; left: 298px; transform: rotate(-25deg); pointer-events: none; z-index: 50;">
+                <span style="font-size: 18px; font-weight: bold; color: #5a1f7d;">B</span>
+                <span style="font-size: 18px; font-weight: bold; color: #5a1f7d; margin-left: 50px;">A</span>
+            </div>
+        </div>
+        <div class="speakers"></div>
+        <div class="on-off" id="power-toggle" style="cursor: pointer;">< off-on ></div>
+        <div class="phones">phones</div>
+    </div>
+    
+    <!-- Emulator Core -->
+    <script src="js-gameboy.js"></script>
+    <!-- Inline Resampler to bypass cache -->
+    <script src="Resampler.js"></script>
+    <script src="XAudioJS.js"></script>
+    
+    <script src="gameboy-core.js"></script>
+    <script src="gameboy-io.js"></script>
+    
+    <script>
+        // Emulator settings
+        window.settings = [
+            true,   // Sound ON (even though it doesn't work)
+            false,  // Don't boot with boot ROM (faster startup)
+            false,  // Give priority to GameBoy mode
+            1,      // Volume level (100%)
+            true,   // Colorize GB mode
+            false,  // Disallow typed arrays
+            6,      // Interval for the emulator loop
+            15,     // Audio buffer minimum span
+            30,     // Audio buffer maximum span
+            false,  // Override MBC1
+            false,  // Override MBC RAM
+            false,  // Use GB boot ROM instead of GBC
+            false,  // Scale canvas in JS
+            true,   // Use image smoothing
+            [true, true, true, true]  // Channel enables
+        ];
+        
+        // Define missing functions
+        window.initNewCanvas = function() {
+            // Stub function - canvas is already initialized
+        };
+        
+        // Define cout function required by emulator
+        window.cout = function(message, level) {};
+        
+        // Define storage functions (for save states)
+        window.findValue = function(key) { return localStorage.getItem(key); };
+        window.setValue = function(key, value) { localStorage.setItem(key, value); };
+        window.deleteValue = function(key) { localStorage.removeItem(key); };
+        
+        // Emulator instance (gameboy-io.js already declared 'gameboy', so we use it)
+        // let gameboy = null;  // Already declared in gameboy-io.js
+        // let gbRunInterval = null;  // Already declared in gameboy-io.js
+        let isRunning = false;
+        
+        // Track button states from different sources (keyboard, touch, mouse)
+        const buttonStates = {
+            [0]: { keyboard: false, screen: false },  // RIGHT
+            [1]: { keyboard: false, screen: false },  // LEFT
+            [2]: { keyboard: false, screen: false },  // UP
+            [3]: { keyboard: false, screen: false },  // DOWN
+            [4]: { keyboard: false, screen: false },  // A
+            [5]: { keyboard: false, screen: false },  // B
+            [6]: { keyboard: false, screen: false },  // SELECT
+            [7]: { keyboard: false, screen: false }   // START
+        };
+        
+        // Game Boy button mapping
+        const GB_BUTTONS = {
+            RIGHT: 0,
+            LEFT: 1,
+            UP: 2,
+            DOWN: 3,
+            A: 4,
+            B: 5,
+            SELECT: 6,
+            START: 7
+        };
+        
+        // Button press handlers - check if button should be active
+        function pressButton(button, source = 'screen') {
+            if (gameboy && isRunning) {
+                const wasPressed = buttonStates[button].keyboard || buttonStates[button].screen;
+                buttonStates[button][source] = true;
+                
+                // Only send press event if button wasn't already pressed
+                if (!wasPressed) {
+                    gameboy.JoyPadEvent(button, true);
+                }
+            }
+        }
+        
+        function releaseButton(button, source = 'screen') {
+            if (gameboy && isRunning) {
+                buttonStates[button][source] = false;
+                
+                // Only send release event if no other source is pressing the button
+                const stillPressed = buttonStates[button].keyboard || buttonStates[button].screen;
+                if (!stillPressed) {
+                    gameboy.JoyPadEvent(button, false);
+                }
+            }
+        }
+        document.getElementById('rom-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Create audio context during user gesture
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass && !window.XAudioJSWebAudioContextHandle) {
+                    window.XAudioJSWebAudioContextHandle = new AudioContextClass();
+                }
+            } catch(err) {
+                window.settings[0] = false;
+            }
+            
+            const status = document.getElementById('status');
+            status.textContent = 'Loading ROM...';
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const canvas = document.getElementById('mainCanvas');
+                    const romData = event.target.result;
+                    
+                    gameboy = new GameBoyCore(canvas, romData);
+                    
+                    // Start emulator
+                    try {
+                        gameboy.start();
+                        
+                        // ===== AUDIO FIX =====
+                        // Problem 1: XAudioJS API version mismatch - the failure callback
+                        // lands in the postheartbeat slot, called every 16ms setting settings[0]=false
+                        settings[0] = true;
+                        XAudioJSCallbackAPIEventNotificationCallback2 = null;
+                        
+                        // Problem 2: XAudioJS's ScriptProcessorNode (0 input channels) never
+                        // fires onaudioprocess in Chrome. Bypass it with our own pipeline.
+                        if (gameboy.audioHandle && XAudioJSWebAudioAudioNode) {
+                            XAudioJSWebAudioAudioNode.disconnect();
+                            XAudioJSWebAudioAudioNode.onaudioprocess = null;
+                            
+                            var directCtx = new (window.AudioContext || window.webkitAudioContext)();
+                            if (directCtx.state === 'suspended') directCtx.resume();
+                            
+                            // Reinitialize resampler for our sample rate
+                            gameboy.audioHandle.resetCallbackAPIAudioBuffer(directCtx.sampleRate);
+                            
+                            var BUF = 2048, CH = 2, _evts = 0;
+                            var directNode = directCtx.createScriptProcessor(BUF, 1, CH);
+                            directNode.onaudioprocess = function(e) {
+                                _evts++;
+                                XAudioJSResampleRefill();
+                                var bufs = [];
+                                for (var c = 0; c < CH; c++) bufs[c] = e.outputBuffer.getChannelData(c);
+                                var i = 0;
+                                for (; i < BUF && XAudioJSResampleBufferStart != XAudioJSResampleBufferEnd; i++) {
+                                    for (var c = 0; c < CH; c++) {
+                                        bufs[c][i] = XAudioJSResampledBuffer[XAudioJSResampleBufferStart++] * XAudioJSVolume;
+                                    }
+                                    if (XAudioJSResampleBufferStart == XAudioJSResampleBufferSize) XAudioJSResampleBufferStart = 0;
+                                }
+                                for (; i < BUF; i++) { for (var c = 0; c < CH; c++) bufs[c][i] = 0; }
+                            };
+                            directNode.connect(directCtx.destination);
+                            
+                            var osc = directCtx.createOscillator();
+                            var gain = directCtx.createGain();
+                            gain.gain.value = 0;
+                            osc.connect(gain);
+                            gain.connect(directNode);
+                            osc.start();
+                            
+                            gameboy.audioUnderrunAdjustment = function() {};
+                        }
+                    } catch(err) {
+                        console.warn('[ROM] Start failed, retrying without sound:', err.message);
+                        window.settings[0] = false;
+                        gameboy = new GameBoyCore(canvas, romData);
+                        gameboy.start();
+                    }
+                    
+                    gameboy.stopEmulator &= 1;
+                    
+                    gbRunInterval = setInterval(function() {
+                        if (!document.hidden) {
+                            gameboy.run();
+                        }
+                    }, settings[6]);
+                    
+                    isRunning = true;
+                    
+                    document.getElementById('rom-loader').style.display = 'none';
+                    document.getElementById('mainCanvas').classList.add('loaded');
+                    
+                    status.textContent = 'ROM loaded! Use arrow keys or touch controls.';
+                } catch (err) {
+                    status.textContent = 'Error loading ROM: ' + err.message;
+                    console.error('[ROM] Error:', err);
+                }
+            };
+            
+            reader.onerror = function() {
+                status.textContent = 'Error reading file';
+            };
+            
+            reader.readAsBinaryString(file);
+        });
+        
+        // Keyboard controls
+        window.addEventListener('keydown', function(e) {
+            if (!isRunning) return;
+            
+            switch(e.key) {
+                case 'ArrowUp': 
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.UP, 'keyboard'); 
+                    break;
+                case 'ArrowDown': 
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.DOWN, 'keyboard'); 
+                    break;
+                case 'ArrowLeft': 
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.LEFT, 'keyboard'); 
+                    break;
+                case 'ArrowRight': 
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.RIGHT, 'keyboard'); 
+                    break;
+                case 'z': 
+                case 'Z': 
+                    pressButton(GB_BUTTONS.B, 'keyboard'); 
+                    break;
+                case 'x': 
+                case 'X': 
+                    pressButton(GB_BUTTONS.A, 'keyboard'); 
+                    break;
+                case 'Enter': 
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.START, 'keyboard'); 
+                    break;
+                case 'Shift': 
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.SELECT, 'keyboard'); 
+                    break;
+            }
+        });
+        
+        window.addEventListener('keyup', function(e) {
+            if (!isRunning) return;
+            
+            switch(e.key) {
+                case 'ArrowUp': 
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.UP, 'keyboard'); 
+                    break;
+                case 'ArrowDown': 
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.DOWN, 'keyboard'); 
+                    break;
+                case 'ArrowLeft': 
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.LEFT, 'keyboard'); 
+                    break;
+                case 'ArrowRight': 
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.RIGHT, 'keyboard'); 
+                    break;
+                case 'z': 
+                case 'Z': 
+                    releaseButton(GB_BUTTONS.B, 'keyboard'); 
+                    break;
+                case 'x': 
+                case 'X': 
+                    releaseButton(GB_BUTTONS.A, 'keyboard'); 
+                    break;
+                case 'Enter': 
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.START, 'keyboard'); 
+                    break;
+                case 'Shift': 
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.SELECT, 'keyboard'); 
+                    break;
+            }
+        });
+        
+        // Touch controls with multi-touch support
+        window.addEventListener('load', function() {
+            // Track active touches by identifier
+            const activeTouches = new Map();
+            
+            // D-pad buttons
+            const btnUp = document.getElementById('btnUp');
+            const btnDown = document.getElementById('btnDown');
+            const btnLeft = document.getElementById('btnLeft');
+            const btnRight = document.getElementById('btnRight');
+            
+            // Helper to handle touch on a button
+            function handleTouchStart(element, button) {
+                element.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    for (let touch of e.changedTouches) {
+                        activeTouches.set(touch.identifier, { element, button });
+                        pressButton(button);
+                    }
+                }, { passive: false });
+            }
+            
+            function handleTouchEnd(element, button) {
+                element.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    for (let touch of e.changedTouches) {
+                        if (activeTouches.has(touch.identifier)) {
+                            activeTouches.delete(touch.identifier);
+                            releaseButton(button);
+                        }
+                    }
+                }, { passive: false });
+                
+                element.addEventListener('touchcancel', (e) => {
+                    e.preventDefault();
+                    for (let touch of e.changedTouches) {
+                        if (activeTouches.has(touch.identifier)) {
+                            activeTouches.delete(touch.identifier);
+                            releaseButton(button);
+                        }
+                    }
+                }, { passive: false });
+            }
+            
+            // Add touch handlers to D-pad
+            handleTouchStart(btnUp, GB_BUTTONS.UP);
+            handleTouchEnd(btnUp, GB_BUTTONS.UP);
+            handleTouchStart(btnDown, GB_BUTTONS.DOWN);
+            handleTouchEnd(btnDown, GB_BUTTONS.DOWN);
+            handleTouchStart(btnLeft, GB_BUTTONS.LEFT);
+            handleTouchEnd(btnLeft, GB_BUTTONS.LEFT);
+            handleTouchStart(btnRight, GB_BUTTONS.RIGHT);
+            handleTouchEnd(btnRight, GB_BUTTONS.RIGHT);
+            
+            // Add mouse events for D-pad (desktop)
+            btnUp.addEventListener('mousedown', (e) => { e.preventDefault(); pressButton(GB_BUTTONS.UP); });
+            btnUp.addEventListener('mouseup', (e) => { e.preventDefault(); releaseButton(GB_BUTTONS.UP); });
+            btnUp.addEventListener('mouseleave', (e) => { releaseButton(GB_BUTTONS.UP); });
+            
+            btnDown.addEventListener('mousedown', (e) => { e.preventDefault(); pressButton(GB_BUTTONS.DOWN); });
+            btnDown.addEventListener('mouseup', (e) => { e.preventDefault(); releaseButton(GB_BUTTONS.DOWN); });
+            btnDown.addEventListener('mouseleave', (e) => { releaseButton(GB_BUTTONS.DOWN); });
+            
+            btnLeft.addEventListener('mousedown', (e) => { e.preventDefault(); pressButton(GB_BUTTONS.LEFT); });
+            btnLeft.addEventListener('mouseup', (e) => { e.preventDefault(); releaseButton(GB_BUTTONS.LEFT); });
+            btnLeft.addEventListener('mouseleave', (e) => { releaseButton(GB_BUTTONS.LEFT); });
+            
+            btnRight.addEventListener('mousedown', (e) => { e.preventDefault(); pressButton(GB_BUTTONS.RIGHT); });
+            btnRight.addEventListener('mouseup', (e) => { e.preventDefault(); releaseButton(GB_BUTTONS.RIGHT); });
+            btnRight.addEventListener('mouseleave', (e) => { releaseButton(GB_BUTTONS.RIGHT); });
+            
+            // A/B buttons (right circle is A, left circle is B) - with visual feedback and multi-touch
+            const btnAB = document.getElementById('btnAB');
+            let currentABTouches = new Map(); // Track multiple touches on A/B
+            
+            function addButtonFeedback(element, isRightButton) {
+                const originalTransform = window.getComputedStyle(element.parentElement).transform;
+                const parent = element.parentElement;
+                
+                if (isRightButton) {
+                    parent.style.transition = 'transform 0.05s ease';
+                    parent.style.transform = originalTransform + ' translateX(2px) translateY(2px) scale(0.95)';
+                    setTimeout(() => {
+                        parent.style.transform = originalTransform;
+                    }, 100);
+                } else {
+                    parent.style.transition = 'transform 0.05s ease';
+                    parent.style.transform = originalTransform + ' translateX(-2px) translateY(2px) scale(0.95)';
+                    setTimeout(() => {
+                        parent.style.transform = originalTransform;
+                    }, 100);
+                }
+            }
+            
+            // Mouse handlers for A/B buttons (desktop)
+            let currentABButton = null;
+            btnAB.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                const rect = btnAB.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                
+                if (x > rect.width / 2) {
+                    currentABButton = GB_BUTTONS.A;
+                    pressButton(GB_BUTTONS.A);
+                    addButtonFeedback(btnAB, true);
+                } else {
+                    currentABButton = GB_BUTTONS.B;
+                    pressButton(GB_BUTTONS.B);
+                    addButtonFeedback(btnAB, false);
+                }
+            });
+            
+            btnAB.addEventListener('mouseup', function(e) {
+                e.preventDefault();
+                if (currentABButton !== null) {
+                    releaseButton(currentABButton);
+                    currentABButton = null;
+                }
+            });
+            
+            btnAB.addEventListener('mouseleave', function(e) {
+                if (currentABButton !== null) {
+                    releaseButton(currentABButton);
+                    currentABButton = null;
+                }
+            });
+            
+            // Touch handlers for A/B buttons (mobile) - multi-touch support
+            btnAB.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const rect = btnAB.getBoundingClientRect();
+                
+                for (let touch of e.changedTouches) {
+                    const x = touch.clientX - rect.left;
+                    const button = (x > rect.width / 2) ? GB_BUTTONS.A : GB_BUTTONS.B;
+                    
+                    currentABTouches.set(touch.identifier, button);
+                    activeTouches.set(touch.identifier, { element: btnAB, button });
+                    pressButton(button);
+                    addButtonFeedback(btnAB, button === GB_BUTTONS.A);
+                }
+            }, { passive: false });
+            
+            btnAB.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                for (let touch of e.changedTouches) {
+                    if (currentABTouches.has(touch.identifier)) {
+                        const button = currentABTouches.get(touch.identifier);
+                        currentABTouches.delete(touch.identifier);
+                        activeTouches.delete(touch.identifier);
+                        releaseButton(button);
+                    }
+                }
+            }, { passive: false });
+            
+            btnAB.addEventListener('touchcancel', function(e) {
+                e.preventDefault();
+                
+                for (let touch of e.changedTouches) {
+                    if (currentABTouches.has(touch.identifier)) {
+                        const button = currentABTouches.get(touch.identifier);
+                        currentABTouches.delete(touch.identifier);
+                        activeTouches.delete(touch.identifier);
+                        releaseButton(button);
+                    }
+                }
+            }, { passive: false });
+            
+            // Start/Select buttons
+            const btnStart = document.getElementById('btnStart');
+            const btnSelect = document.getElementById('btnSelect');
+            
+            btnStart.addEventListener('click', function() {
+                pressButton(GB_BUTTONS.START);
+                setTimeout(() => releaseButton(GB_BUTTONS.START), 100);
+            });
+            
+            btnSelect.addEventListener('click', function() {
+                pressButton(GB_BUTTONS.SELECT);
+                setTimeout(() => releaseButton(GB_BUTTONS.SELECT), 100);
+            });
+        });
+        
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            if (!isRunning) return;
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.UP);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.DOWN);
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.LEFT);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.RIGHT);
+                    break;
+                case 'z':
+                case 'Z':
+                    pressButton(GB_BUTTONS.A);
+                    break;
+                case 'x':
+                case 'X':
+                    pressButton(GB_BUTTONS.B);
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.START);
+                    break;
+                case 'Shift':
+                    e.preventDefault();
+                    pressButton(GB_BUTTONS.SELECT);
+                    break;
+            }
+        });
+        
+        document.addEventListener('keyup', function(e) {
+            if (!isRunning) return;
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.UP);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.DOWN);
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.LEFT);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.RIGHT);
+                    break;
+                case 'z':
+                case 'Z':
+                    releaseButton(GB_BUTTONS.A);
+                    break;
+                case 'x':
+                case 'X':
+                    releaseButton(GB_BUTTONS.B);
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.START);
+                    break;
+                case 'Shift':
+                    e.preventDefault();
+                    releaseButton(GB_BUTTONS.SELECT);
+                    break;
+            }
+        });
+        
+        // Power button (top left red LED) - turn off emulator and return to ROM loader
+        function powerOff() {
+            if (isRunning) {
+                if (gbRunInterval) {
+                    clearInterval(gbRunInterval);
+                    gbRunInterval = null;
+                }
+                
+                if (gameboy) {
+                    gameboy.stopEmulator |= 2;
+                    gameboy = null;
+                }
+                
+                isRunning = false;
+                
+                const canvas = document.getElementById('mainCanvas');
+                canvas.classList.remove('loaded');
+                
+                document.getElementById('rom-loader').style.display = 'block';
+                document.getElementById('status').textContent = 'Select a Game Boy ROM file (.gb or .gbc)';
+                document.getElementById('rom-file').value = '';
+            }
+        }
+        
+        // Power button at top left
+        document.getElementById('power-button').addEventListener('click', powerOff);
+        
+        // Bottom power toggle (keep for compatibility)
+        document.getElementById('power-toggle').addEventListener('click', powerOff);
+    </script>
+</body>
+</html>

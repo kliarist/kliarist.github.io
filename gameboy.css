@@ -167,8 +167,8 @@ input.btn-hide {
   content: "";
   position: absolute;
   z-index: 1;
-  top: 30px;
-  left: 30px;
+  top: 40px;
+  left: 35px;
   width: 30px;
   height: 30px;
   background-color: #353535;

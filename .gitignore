@@ -16,3 +16,8 @@ Thumbs.db
 
 # Session files
 *.session
+
+# ROM files (copyrighted)
+roms/
+*.gb
+*.gbc
