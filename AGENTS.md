@@ -341,36 +341,6 @@ Before committing, verify:
 
 ---
 
-## 📋 Recent Code Cleanup (Feb 2026)
-
-### File Structure Reorganization
-- Moved all JavaScript files to `js/` folder
-  - Game files: `js/game/`
-  - Emulator files: `js/emulator/`
-- Moved all CSS files to `css/` folder
-- Renamed files to follow lowercase convention:
-  - `Randomiser.js` → `randomiser.js`
-  - `Resampler.js` → `resampler.js`
-  - `XAudioJS.js` → `xaudio.js`
-
-### CSS Cleanup
-- Extracted inline styles to external CSS files
-- Created `css/common.css` for shared styles
-- Created `css/emulator.css` for emulator-specific styles
-- Removed redundant inline `<style>` blocks from HTML
-
-### UI Improvements
-- Added discrete mode-switch button (top-right corner)
-- Allows seamless switching between Tetris and Emulator modes
-- Button is semi-transparent and only becomes visible on hover
-
-### Testing
-- Verified functionality on desktop and mobile
-- Ensured touch controls work properly
-- Confirmed both Tetris and Emulator modes function correctly
-
----
-
 ## 📚 Resources
 
 - [Conventional Commits](https://www.conventionalcommits.org/)
