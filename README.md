@@ -4,6 +4,13 @@
 
 This project features both a custom-built Tetris game and a full RetroBoy emulator, all wrapped in an authentic Nintendo RetroBoy console interface that works on both desktop and mobile devices.
 
+## 🚀 Play Now
+
+**[Click here to play!](https://kliarist.github.io/)**
+
+- **Tetris Mode**: Instant play, no setup required
+- **Emulator Mode**: Upload your own RetroBoy ROMs
+
 ![RetroBoy Tetris Screenshot](screenshot.png)
 
 ## ✨ Features
@@ -40,13 +47,6 @@ This project features both a custom-built Tetris game and a full RetroBoy emulat
 
 ### Mode Switching
 - Use the **🎮 Switch** button in the top-right corner to toggle between Tetris and Emulator modes
-
-## 🚀 Play Now
-
-**[Click here to play!](https://kliarist.github.io/)**
-
-- **Tetris Mode**: Instant play, no setup required
-- **Emulator Mode**: Upload your own RetroBoy ROMs
 
 ## 🛠️ Tech Stack
 
