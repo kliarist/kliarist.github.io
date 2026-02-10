@@ -75,9 +75,9 @@ function titleScreen(){
       textFont(RetroFont);
       textAlign(CENTER, CENTER);
       textSize(px*10);
-      text("GAME OVER", width/2, px*60);
+      text("GAME OVER", width/2, px*65);
       textSize(px*8);
-      text("Score: " + score, width/2, px*75);
+      text("Score: " + score, width/2, px*80);
       textSize(px*7);
       text("Press START to Play Again", width/2, px*115);
       pop()
