@@ -78,11 +78,12 @@ const updateGrid=()=>{
                 isFree= false
                 Holdpressed=false
                 topOff=1;
-                leftOff =4;
+                leftOff=3;
                 setTempBlock()
                 break
             }
         }
+        if(!isFree) break;
     }
     if(isFree){
         if(topOff<19){
@@ -93,8 +94,8 @@ const updateGrid=()=>{
             randomclock = (randomclock+1)%7
             setRandomiser()
             Holdpressed=false
-            topOff=2;
-            leftOff=4;
+            topOff=1;
+            leftOff=3;
         }
     }
 
@@ -177,8 +178,8 @@ const setHold = () => {
         holdBlock = [currentBlock,currentBlockType]
         randomclock = (randomclock+1)%7
         setRandomiser()
-        topOff=2;
-        leftOff=4;
+        topOff=1;
+        leftOff=3;
     }
     else{
         if(!Holdpressed){
@@ -186,8 +187,8 @@ const setHold = () => {
             holdBlock = [currentBlock,currentBlockType]
             currentBlock = temp[0]
             currentBlockType = temp[1] 
-            topOff = 2
-            leftOff =4           
+            topOff = 1
+            leftOff = 3           
         }
     }
         
