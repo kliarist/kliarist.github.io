@@ -4,67 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Boy Tetris</title>
-    <link rel="stylesheet" href="gameboy.css">
+    <link rel="stylesheet" href="css/gameboy.css">
+    <link rel="stylesheet" href="css/common.css">
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
-    <script src="./p5.sound.min.js"></script>
-    <script src="./Randomiser.js"></script>
-    <script src="./main.js"></script>
-    <script src="./controls.js"></script>
-    <script src="./display_ui.js"></script>
-    <script src="./script.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* Make buttons clickable with higher z-index */
-        .btn-direction {
-            cursor: pointer !important;
-            user-select: none !important;
-            z-index: 100 !important;
-            position: relative !important;
-        }
-        
-        .btn-AB {
-            cursor: pointer !important;
-            user-select: none !important;
-            z-index: 10 !important;
-        }
-        
-        /* Make vertical and horizontal parts of D-pad clickable */
-        .btn-direction .vertical,
-        .btn-direction .horizontal {
-            z-index: 101 !important;
-            pointer-events: auto !important;
-        }
-        
-        /* Disable pointer events on the center circle shadow */
-        .btn-direction:before {
-            pointer-events: none !important;
-        }
-        
-        /* Position canvas within screen */
-        .gameboy .screen-cont .screen canvas {
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            max-width: 100% !important;
-            max-height: 100% !important;
-            width: auto !important;
-            height: auto !important;
-            image-rendering: pixelated !important;
-        }
-    </style>
+    <script src="js/p5.sound.min.js"></script>
+    <script src="js/game/randomiser.js"></script>
+    <script src="js/game/main.js"></script>
+    <script src="js/game/controls.js"></script>
+    <script src="js/game/display_ui.js"></script>
+    <script src="js/game/script.js"></script>
 </head>
 <body>
+    <div class="mode-switch">
+        <a href="emulator.html">🎮 Switch to Emulator</a>
+    </div>
     <div class="gameboy">
         <div class="screen-cont">
             <div class="power power-on"></div>

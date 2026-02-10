@@ -4,163 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Boy Emulator</title>
-    <link rel="stylesheet" href="gameboy.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* Position canvas within screen */
-        .gameboy .screen-cont .screen canvas {
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            width: 100% !important;
-            height: 100% !important;
-            image-rendering: pixelated !important;
-            image-rendering: crisp-edges !important;
-        }
-        
-        /* Make buttons more responsive */
-        .btn-AB {
-            transition: transform 0.05s ease !important;
-            cursor: pointer !important;
-            touch-action: none !important;
-        }
-        
-        .btn-AB:active {
-            transform: rotate(-25deg) scale(0.95) !important;
-        }
-        
-        #btnUp, #btnDown, #btnLeft, #btnRight {
-            transition: opacity 0.05s ease;
-            touch-action: none !important;
-        }
-        
-        #btnUp:active, #btnDown:active, #btnLeft:active, #btnRight:active {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        /* Enable multi-touch for game controls */
-        .controls-cont {
-            touch-action: none !important;
-        }
-        
-        body {
-            touch-action: pan-x pan-y !important;
-        }
-        
-        /* ROM Upload Interface */
-        #rom-loader {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #000;
-            font-family: Arial, sans-serif;
-            z-index: 1000;
-        }
-        
-        #rom-loader h2 {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        
-        #rom-loader input[type="file"] {
-            display: none;
-        }
-        
-        #rom-loader label {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #5a1f7d;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        
-        #rom-loader label:hover {
-            background: #7a2fa0;
-        }
-        
-        #status {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #666;
-        }
-        
-        #mainCanvas {
-            display: none;
-        }
-        
-        #mainCanvas.loaded {
-            display: block;
-        }
-        
-        /* Start overlay for sound initialization */
-        #start-overlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            cursor: pointer;
-        }
-        
-        #start-overlay.active {
-            display: flex;
-        }
-        
-        #start-overlay.hidden {
-            display: none !important;
-            pointer-events: none !important;
-        }
-        
-        #start-overlay h2 {
-            color: white;
-            font-family: Arial, sans-serif;
-            font-size: 20px;
-            margin-bottom: 10px;
-            text-align: center;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        
-        #start-overlay p {
-            color: #ccc;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            text-align: center;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-        
-        /* Ensure screen container is positioned */
-        .gameboy .screen-cont .screen {
-            position: relative;
-        }
-    </style>
+    <link rel="stylesheet" href="css/gameboy.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/emulator.css">
 </head>
 <body>
+    <div class="mode-switch">
+        <a href="index.html">🎮 Switch to Tetris</a>
+    </div>
     <div class="gameboy">
         <div class="screen-cont">
             <div class="power power-on" id="power-button" style="cursor: pointer;" title="Click to power off"></div>
@@ -217,13 +68,13 @@
     </div>
     
     <!-- Emulator Core -->
-    <script src="js-gameboy.js"></script>
+    <script src="js/emulator/js-gameboy.js"></script>
     <!-- Inline Resampler to bypass cache -->
-    <script src="Resampler.js"></script>
-    <script src="XAudioJS.js"></script>
+    <script src="js/emulator/resampler.js"></script>
+    <script src="js/emulator/xaudio.js"></script>
     
-    <script src="gameboy-core.js"></script>
-    <script src="gameboy-io.js"></script>
+    <script src="js/emulator/gameboy-core.js"></script>
+    <script src="js/emulator/gameboy-io.js"></script>
     
     <script>
         // Emulator settings

@@ -1,19 +1,27 @@
-# 🎮 Game Boy Tetris
+# 🎮 Game Boy Tetris & Emulator
 
 **Remember the good old days?** Now you can relive them right in your browser! 
 
-This is a fully-functional Game Boy Tetris clone, built with vanilla JavaScript and p5.js. It features an authentic Nintendo Game Boy console interface that works on both desktop and mobile devices.
+This project features both a custom-built Tetris game and a full Game Boy emulator, all wrapped in an authentic Nintendo Game Boy console interface that works on both desktop and mobile devices.
 
 ![Game Boy Tetris Screenshot](screenshot.png)
 
 ## ✨ Features
 
+### Tetris Mode
 - 🕹️ **Authentic Game Boy UI** - Complete with D-pad, A/B buttons, and Start/Select controls
 - 📱 **Mobile-Friendly** - Touch controls that work perfectly on phones and tablets
 - 🎵 **Classic Tetris Music** - The iconic theme song that'll get stuck in your head
 - 🎨 **Pixel-Perfect Graphics** - Just like you remember from 1989
 - ⚡ **Progressive Speed** - Gets faster as you level up
 - 🏆 **Score Tracking** - Compete with yourself for the highest score
+
+### Emulator Mode
+- 🎮 **Full Game Boy Emulator** - Play any Game Boy ROM
+- 💾 **Save States** - Save and load your progress in browser
+- 🎵 **Audio Support** - Full sound emulation
+- 📁 **ROM Upload** - Load your own legal ROMs
+- 🕹️ **Same Controls** - Identical touch and keyboard controls
 
 ## 🎮 How to Play
 
@@ -30,9 +38,15 @@ This is a fully-functional Game Boy Tetris clone, built with vanilla JavaScript 
 - **Tap the A button** to rotate
 - **Tap START** to begin or pause
 
+### Mode Switching
+- Use the **🎮 Switch** button in the top-right corner to toggle between Tetris and Emulator modes
+
 ## 🚀 Play Now
 
 **[Click here to play!](https://kliarist.github.io/)**
+
+- **Tetris Mode**: Instant play, no setup required
+- **Emulator Mode**: Upload your own Game Boy ROMs
 
 ## 🛠️ Tech Stack
 
@@ -40,6 +54,26 @@ This is a fully-functional Game Boy Tetris clone, built with vanilla JavaScript 
 - p5.js for graphics rendering
 - p5.sound for audio playback
 - CSS3 for the Game Boy console design
+- Game Boy emulator core (GameBoyCore.js)
+
+## 📁 Project Structure
+
+```
+retris/
+├── index.html          # Tetris game (main page)
+├── emulator.html       # Game Boy emulator
+├── js/
+│   ├── game/          # Tetris game files
+│   ├── emulator/      # Emulator core files
+│   └── p5.sound.min.js
+├── css/
+│   ├── gameboy.css    # Game Boy console styling
+│   ├── common.css     # Shared styles
+│   └── emulator.css   # Emulator-specific styles
+├── assets/            # Images, audio, fonts
+└── roms/              # Sample Game Boy ROMs
+
+```
 
 ## 🎯 Game Rules
 
@@ -56,3 +90,4 @@ Inspired by the original Game Boy Tetris (1989) and built with love for retro ga
 ---
 
 *Made with 💜 for nostalgic gamers everywhere*
+

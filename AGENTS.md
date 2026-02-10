@@ -4,6 +4,60 @@ This document outlines the coding standards, commit conventions, and best practi
 
 ---
 
+## 🧹 Code Organization & Structure
+
+### File Naming Conventions
+
+**JavaScript Files:**
+- Use lowercase with hyphens (kebab-case) or camelCase
+- ✅ `randomiser.js`, `main.js`, `controls.js`
+- ❌ `Randomiser.js`, `Main.js` (avoid PascalCase for files)
+
+**CSS Files:**
+- Use lowercase with hyphens
+- ✅ `gameboy.css`, `common.css`, `emulator.css`
+
+### Project Structure
+
+Follow standard web project organization:
+
+```
+project/
+├── index.html           # Main entry point
+├── js/
+│   ├── game/           # Game-specific modules
+│   ├── emulator/       # Emulator modules
+│   └── lib/            # Third-party libraries
+├── css/
+│   ├── common.css      # Shared styles
+│   └── specific.css    # Page-specific styles
+└── assets/
+    ├── images/
+    ├── audio/
+    └── fonts/
+```
+
+### CSS Best Practices
+
+1. **Avoid Inline Styles** - Use external CSS files
+2. **Organize by Purpose**:
+   - `common.css` - Shared styles across pages
+   - `component.css` - Component-specific styles
+3. **Use Meaningful Class Names** - `.mode-switch`, `.btn-direction`
+4. **Group Related Styles** - Keep related selectors together
+
+### Code Cleanliness Checklist
+
+Before committing, ensure:
+- [ ] Files follow naming conventions (lowercase)
+- [ ] Code is properly organized in folders
+- [ ] No inline CSS unless absolutely necessary
+- [ ] CSS is split into logical files (common, specific)
+- [ ] All paths are updated after restructuring
+- [ ] Both desktop and mobile versions tested
+
+---
+
 ## 📝 Commit Standards
 
 ### Conventional Commits
@@ -284,6 +338,36 @@ Before committing, verify:
 5. Push to GitHub: `git push origin main`
 6. Verify deployment at https://kliarist.github.io/
 7. Wait ~1 minute for GitHub Pages to update
+
+---
+
+## 📋 Recent Code Cleanup (Feb 2026)
+
+### File Structure Reorganization
+- Moved all JavaScript files to `js/` folder
+  - Game files: `js/game/`
+  - Emulator files: `js/emulator/`
+- Moved all CSS files to `css/` folder
+- Renamed files to follow lowercase convention:
+  - `Randomiser.js` → `randomiser.js`
+  - `Resampler.js` → `resampler.js`
+  - `XAudioJS.js` → `xaudio.js`
+
+### CSS Cleanup
+- Extracted inline styles to external CSS files
+- Created `css/common.css` for shared styles
+- Created `css/emulator.css` for emulator-specific styles
+- Removed redundant inline `<style>` blocks from HTML
+
+### UI Improvements
+- Added discrete mode-switch button (top-right corner)
+- Allows seamless switching between Tetris and Emulator modes
+- Button is semi-transparent and only becomes visible on hover
+
+### Testing
+- Verified functionality on desktop and mobile
+- Ensured touch controls work properly
+- Confirmed both Tetris and Emulator modes function correctly
 
 ---
 

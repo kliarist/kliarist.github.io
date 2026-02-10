@@ -1,0 +1,133 @@
+/* Emulator-specific styles */
+
+.gameboy .screen-cont .screen canvas {
+    width: 100% !important;
+    height: 100% !important;
+    image-rendering: crisp-edges !important;
+}
+
+.btn-AB {
+    transition: transform 0.05s ease !important;
+    touch-action: none !important;
+}
+
+.btn-AB:active {
+    transform: rotate(-25deg) scale(0.95) !important;
+}
+
+#btnUp, #btnDown, #btnLeft, #btnRight {
+    transition: opacity 0.05s ease;
+    touch-action: none !important;
+}
+
+#btnUp:active, #btnDown:active, #btnLeft:active, #btnRight:active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.controls-cont {
+    touch-action: none !important;
+}
+
+body {
+    touch-action: pan-x pan-y !important;
+}
+
+/* ROM Upload Interface */
+#rom-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #000;
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+}
+
+#rom-loader h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+#rom-loader input[type="file"] {
+    display: none;
+}
+
+#rom-loader label {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #5a1f7d;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#rom-loader label:hover {
+    background: #7a2fa0;
+}
+
+#status {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #666;
+}
+
+#mainCanvas {
+    display: none;
+}
+
+#mainCanvas.loaded {
+    display: block;
+}
+
+/* Start overlay for sound initialization */
+#start-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+#start-overlay.active {
+    display: flex;
+}
+
+#start-overlay.hidden {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+#start-overlay h2 {
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+#start-overlay p {
+    color: #ccc;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    text-align: center;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.gameboy .screen-cont .screen {
+    position: relative;
+}
