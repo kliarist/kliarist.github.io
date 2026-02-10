@@ -9,7 +9,6 @@ window.addEventListener("keydown",
     else if(event.key=== "ArrowDown"){
         if(checkifPossible(currentBlock,1,0)){
             topOff = (topOff+1)%20
-            score++;
             setTempBlock()
         } else {
             setCurrentBlock(topOff,leftOff)
