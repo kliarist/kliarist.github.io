@@ -68,23 +68,20 @@ function draw() {
 }
 function titleScreen(){
   push()
-    // Check if it's game over or initial screen
     if(gameOver) {
-      // Game over screen
       image(title_screen_img,0,0,width,height)
       push()
       fill(black);
       textFont(RetroFont);
-      textSize(px*10);
       textAlign(CENTER, CENTER);
-      text("GAME OVER", width/2, height/2 - px*15);
+      textSize(px*10);
+      text("GAME OVER", width/2, px*50);
       textSize(px*8);
-      text("Score: " + score, width/2, height/2 + px*5);
-      textSize(px*6);
-      text("Press START to Play Again", width/2, height/2 + px*25);
+      text("Score: " + score, width/2, px*65);
+      textSize(px*5);
+      text("Press START to Play Again", width/2, px*115);
       pop()
     } else {
-      // Initial start screen
       image(title_screen_img,0,0,width,height)
       push()
       fill(black);
