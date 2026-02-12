@@ -89,14 +89,129 @@ body {
 /* GitHub Link */
 .github-link {
     position: absolute;
-    top: 7px;
+    top: 5px;
     right: 5px;
     color: #000;
-    /*opacity: 0.6;*/
+    opacity: 0.6;
     transition: opacity 0.3s;
     z-index: 1000;
 }
 
 .github-link:hover {
+    opacity: 1;
+}
+
+/* Control Button Overlays */
+#btnUp {
+    position: absolute;
+    top: 60px;
+    left: 70px;
+    width: 40px;
+    height: 40px;
+    z-index: 200;
+    cursor: pointer;
+}
+
+#btnDown {
+    position: absolute;
+    top: 135px;
+    left: 70px;
+    width: 40px;
+    height: 35px;
+    z-index: 200;
+    cursor: pointer;
+}
+
+#btnLeft {
+    position: absolute;
+    top: 95px;
+    left: 35px;
+    width: 35px;
+    height: 40px;
+    z-index: 200;
+    cursor: pointer;
+}
+
+#btnRight {
+    position: absolute;
+    top: 95px;
+    left: 110px;
+    width: 35px;
+    height: 40px;
+    z-index: 200;
+    cursor: pointer;
+}
+
+#btnSelect {
+    position: absolute;
+    top: 205px;
+    left: 135px;
+    width: 60px;
+    height: 12px;
+    transform: rotate(-25deg);
+    z-index: 100;
+    cursor: pointer;
+}
+
+#btnStart {
+    position: absolute;
+    top: 205px;
+    left: 202px;
+    width: 60px;
+    height: 12px;
+    transform: rotate(-25deg);
+    z-index: 100;
+    cursor: pointer;
+}
+
+/* Button Labels */
+.label-select {
+    position: absolute;
+    top: 223px;
+    left: 155px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #5a1f7d;
+    transform: rotate(-25deg);
+    pointer-events: none;
+    z-index: 50;
+}
+
+.label-start {
+    position: absolute;
+    top: 221px;
+    left: 225px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #5a1f7d;
+    transform: rotate(-25deg);
+    pointer-events: none;
+    z-index: 50;
+}
+
+.label-ab {
+    position: absolute;
+    top: 135px;
+    left: 298px;
+    transform: rotate(-25deg);
+    pointer-events: none;
+    z-index: 50;
+}
+
+.label-ab span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #5a1f7d;
+}
+
+.label-ab span:last-child {
+    margin-left: 50px;
+}
+
+/* Emulator specific styles */
+#power-button,
+#power-toggle {
+    cursor: pointer;
+}
     opacity: 1;
 }

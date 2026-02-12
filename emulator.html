@@ -14,7 +14,7 @@
             <a href="index.html">🎮 Switch to Tetris</a>
         </div>
         <div class="screen-cont">
-            <div class="power power-on" id="power-button" style="cursor: pointer;" title="Click to power off"></div>
+            <div class="power power-on" id="power-button" title="Click to power off"></div>
             <div class="screen">
                 <div class="header">DOT MATRIX WITH STEREO SOUND</div>
                 
@@ -42,31 +42,31 @@
                 <div class="horizontal"></div>
             </div>
             <!-- Invisible directional buttons overlaid on D-pad -->
-            <div id="btnUp" style="position: absolute; top: 60px; left: 70px; width: 40px; height: 40px; z-index: 200; cursor: pointer;"></div>
-            <div id="btnDown" style="position: absolute; top: 135px; left: 70px; width: 40px; height: 35px; z-index: 200; cursor: pointer;"></div>
-            <div id="btnLeft" style="position: absolute; top: 95px; left: 35px; width: 35px; height: 40px; z-index: 200; cursor: pointer;"></div>
-            <div id="btnRight" style="position: absolute; top: 95px; left: 110px; width: 35px; height: 40px; z-index: 200; cursor: pointer;"></div>
+            <div id="btnUp"></div>
+            <div id="btnDown"></div>
+            <div id="btnLeft"></div>
+            <div id="btnRight"></div>
             
             <div class="btn-AB" id="btnAB"></div>
             <div class="btn-start-select"></div>
-            <div id="btnSelect" style="position: absolute; top: 205px; left: 135px; width: 60px; height: 12px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
-            <div id="btnStart" style="position: absolute; top: 205px; left: 202px; width: 60px; height: 12px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
+            <div id="btnSelect"></div>
+            <div id="btnStart"></div>
             
             <!-- Button Labels -->
-            <div style="position: absolute; top: 223px; left: 155px; font-size: 10px; font-weight: bold; color: #5a1f7d; transform: rotate(-25deg); pointer-events: none; z-index: 50;">SELECT</div>
-            <div style="position: absolute; top: 221px; left: 225px; font-size: 10px; font-weight: bold; color: #5a1f7d; transform: rotate(-25deg); pointer-events: none; z-index: 50;">START</div>
+            <div class="label-select">SELECT</div>
+            <div class="label-start">START</div>
             
             <!-- A/B Button Labels -->
-            <div style="position: absolute; top: 135px; left: 298px; transform: rotate(-25deg); pointer-events: none; z-index: 50;">
-                <span style="font-size: 18px; font-weight: bold; color: #5a1f7d;">B</span>
-                <span style="font-size: 18px; font-weight: bold; color: #5a1f7d; margin-left: 50px;">A</span>
+            <div class="label-ab">
+                <span>B</span>
+                <span>A</span>
             </div>
         </div>
         <div class="speakers"></div>
         <div class="nintendo-label">
             Pixelendo<span class="gameboy-text">RETRO BOY<sup>TM</sup></span>
         </div>
-        <div class="on-off" id="power-toggle" style="cursor: pointer;">< off-on ></div>
+        <div class="on-off" id="power-toggle">< off-on ></div>
         <div class="phones">phones</div>
         <a href="https://github.com/kliarist/kliarist.github.io" target="_blank" class="github-link">
             <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">

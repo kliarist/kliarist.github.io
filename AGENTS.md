@@ -39,12 +39,23 @@ project/
 
 ### CSS Best Practices
 
-1. **Avoid Inline Styles** - Use external CSS files
-2. **Organize by Purpose**:
+1. **NO Inline Styles** - Always use external CSS files
+2. **NO Inline Scripts** - Move all JavaScript to external .js files
+3. **Organize by Purpose**:
    - `common.css` - Shared styles across pages
    - `component.css` - Component-specific styles
-3. **Use Meaningful Class Names** - `.mode-switch`, `.btn-direction`
-4. **Group Related Styles** - Keep related selectors together
+4. **Use Meaningful Class Names** - `.mode-switch`, `.btn-direction`, `.label-select`
+5. **Group Related Styles** - Keep related selectors together
+6. **Use IDs for JavaScript hooks** - Use classes for styling, IDs for JS interaction
+
+### JavaScript Best Practices
+
+1. **NO Inline Scripts** - All JavaScript must be in external files
+2. **Organize by Feature**:
+   - `touch-controls.js` - Mobile touch controls
+   - `controls.js` - Keyboard controls
+   - `main.js` - Game logic
+3. **Use Descriptive File Names** - Clear purpose from filename
 
 ### Code Cleanliness Checklist
 

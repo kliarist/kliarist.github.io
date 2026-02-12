@@ -31,24 +31,24 @@
                 <div class="horizontal"></div>
             </div>
             <!-- Invisible directional buttons overlaid on D-pad -->
-            <div id="btnUp" style="position: absolute; top: 60px; left: 70px; width: 40px; height: 40px; z-index: 200; cursor: pointer;"></div>
-            <div id="btnDown" style="position: absolute; top: 135px; left: 70px; width: 40px; height: 35px; z-index: 200; cursor: pointer;"></div>
-            <div id="btnLeft" style="position: absolute; top: 95px; left: 35px; width: 35px; height: 40px; z-index: 200; cursor: pointer;"></div>
-            <div id="btnRight" style="position: absolute; top: 95px; left: 110px; width: 35px; height: 40px; z-index: 200; cursor: pointer;"></div>
+            <div id="btnUp"></div>
+            <div id="btnDown"></div>
+            <div id="btnLeft"></div>
+            <div id="btnRight"></div>
             
             <div class="btn-AB" id="btnAB"></div>
             <div class="btn-start-select"></div>
-            <div id="btnSelect" style="position: absolute; top: 205px; left: 135px; width: 60px; height: 12px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
-            <div id="btnStart" style="position: absolute; top: 205px; left: 202px; width: 60px; height: 12px; transform: rotate(-25deg); z-index: 100; cursor: pointer;"></div>
+            <div id="btnSelect"></div>
+            <div id="btnStart"></div>
             
             <!-- Button Labels -->
-            <div style="position: absolute; top: 223px; left: 155px; font-size: 10px; font-weight: bold; color: #5a1f7d; transform: rotate(-25deg); pointer-events: none; z-index: 50;">SELECT</div>
-            <div style="position: absolute; top: 221px; left: 225px; font-size: 10px; font-weight: bold; color: #5a1f7d; transform: rotate(-25deg); pointer-events: none; z-index: 50;">START</div>
+            <div class="label-select">SELECT</div>
+            <div class="label-start">START</div>
             
             <!-- A/B Button Labels -->
-            <div style="position: absolute; top: 135px; left: 298px; transform: rotate(-25deg); pointer-events: none; z-index: 50;">
-                <span style="font-size: 18px; font-weight: bold; color: #5a1f7d;">B</span>
-                <span style="font-size: 18px; font-weight: bold; color: #5a1f7d; margin-left: 50px;">A</span>
+            <div class="label-ab">
+                <span>B</span>
+                <span>A</span>
             </div>
         </div>
         <div class="speakers"></div>
@@ -63,74 +63,6 @@
             </svg>
         </a>
     </div>
-    <script>
-        window.addEventListener('load', function() {
-            const btnUp = document.getElementById('btnUp');
-            const btnDown = document.getElementById('btnDown');
-            const btnLeft = document.getElementById('btnLeft');
-            const btnRight = document.getElementById('btnRight');
-            const btnAB = document.getElementById('btnAB');
-            const btnStart = document.getElementById('btnStart');
-            
-            function pressKey(key) {
-                window.dispatchEvent(new KeyboardEvent('keydown', {key: key}));
-            }
-            
-            // Separate button for each direction
-            btnLeft.addEventListener('touchstart', function(e) { e.preventDefault(); pressKey('ArrowLeft'); });
-            btnLeft.addEventListener('click', function(e) { e.preventDefault(); pressKey('ArrowLeft'); });
-            
-            btnRight.addEventListener('touchstart', function(e) { e.preventDefault(); pressKey('ArrowRight'); });
-            btnRight.addEventListener('click', function(e) { e.preventDefault(); pressKey('ArrowRight'); });
-            
-            // DOWN button - hold to repeat like keyboard
-            let downInterval = null;
-            btnDown.addEventListener('touchstart', function(e) { 
-                e.preventDefault(); 
-                pressKey('ArrowDown');
-                // Repeat while holding
-                downInterval = setInterval(function() {
-                    pressKey('ArrowDown');
-                }, 50); // Repeat every 50ms
-            });
-            btnDown.addEventListener('touchend', function(e) { 
-                e.preventDefault(); 
-                if(downInterval) {
-                    clearInterval(downInterval);
-                    downInterval = null;
-                }
-            });
-            btnDown.addEventListener('click', function(e) { 
-                e.preventDefault(); 
-                pressKey('ArrowDown'); 
-            });
-            
-            btnUp.addEventListener('touchstart', function(e) { e.preventDefault(); });
-            btnUp.addEventListener('click', function(e) { e.preventDefault(); });
-            
-            // A Button
-            btnAB.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const rect = btnAB.getBoundingClientRect();
-                if(touch.clientX - rect.left > rect.width/2) pressKey('ArrowUp');
-            });
-            
-            btnAB.addEventListener('click', function(e) {
-                const rect = btnAB.getBoundingClientRect();
-                if(e.clientX - rect.left > rect.width/2) pressKey('ArrowUp');
-            });
-            
-            // START Button
-            btnStart.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                pressKey(window.gameStart ? ' ' : 'Enter');
-            });
-            
-            btnStart.addEventListener('click', function(e) {
-                pressKey(window.gameStart ? ' ' : 'Enter');
-            });
-        });
-    </script>
+    <script src="js/game/touch-controls.js"></script>
 </body>
 </html>
