@@ -27,6 +27,7 @@ input.btn-hide {
   background: #eee;
   border-radius: 10px 10px 60px 10px;
   box-shadow: 5px 5px rgba(0,0,0,0.1);
+  transform: scale(min(1, (100vw - 40px) / 422, (100vh - 40px) / 697));
 }
 .gameboy:before {
   content: "";
@@ -240,13 +241,13 @@ input.btn-hide {
 .gameboy .controls-cont .btn-start-select {
   position: absolute;
   top: 205px;
-  left: 140px;
+  left: 135px;
   height: 12px;
   width: 60px;
   background: #999;
   border-radius: 10px;
   -webkit-transform: rotate(-25deg);
-  box-shadow: 57px 27px #999, 0 0 0 5px #dfdfdf, 57px 27px 0 5px #dfdfdf;
+  box-shadow: 62px 27px #999, 0 0 0 5px #dfdfdf, 62px 27px 0 5px #dfdfdf;
 }
 .gameboy .speakers {
   content: "";
