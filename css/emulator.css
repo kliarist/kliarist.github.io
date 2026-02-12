@@ -74,6 +74,18 @@ body {
     color: #666;
 }
 
+.rom-download-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #5a1f7d;
+    text-decoration: none;
+}
+
+.rom-download-link:hover {
+    text-decoration: underline;
+}
+
 #mainCanvas {
     display: none;
 }
