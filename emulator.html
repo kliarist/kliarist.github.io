@@ -10,6 +10,7 @@
 </head>
 <body>
     <div class="gameboy">
+        <button id="eject-button" title="Eject ROM">⏏</button>
         <div class="mode-switch">
             <a href="index.html">🎮 Switch to Tetris</a>
         </div>
@@ -22,8 +23,8 @@
                 <div id="rom-loader">
                     <h2>🎮 RetroBoy Emulator</h2>
                     <label for="rom-file">Upload ROM File</label>
-                    <input type="file" id="rom-file" accept=".gb,.gbc">
-                    <div id="status">Select a RetroBoy ROM file (.gb or .gbc)</div>
+                    <input type="file" id="rom-file" accept=".gb,.gbc,.zip">
+                    <div id="status">Select a ROM file (.gb, .gbc, or .zip)</div>
                 </div>
                 
                 <!-- Emulator Canvas -->
@@ -75,6 +76,9 @@
         </a>
     </div>
 
+    <!-- JSZip for ZIP file support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
     <!-- Emulator Core -->
     <script src="js/emulator/js-gameboy.js"></script>
     <!-- Inline Resampler to bypass cache -->
@@ -170,28 +174,10 @@
                 }
             }
         }
-        document.getElementById('rom-file').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            // Create audio context during user gesture
+        async function loadROMData(romData) {
             try {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (AudioContextClass && !window.XAudioJSWebAudioContextHandle) {
-                    window.XAudioJSWebAudioContextHandle = new AudioContextClass();
-                }
-            } catch(err) {
-                window.settings[0] = false;
-            }
-            
-            const status = document.getElementById('status');
-            status.textContent = 'Loading ROM...';
-            
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                try {
-                    const canvas = document.getElementById('mainCanvas');
-                    const romData = event.target.result;
+                const canvas = document.getElementById('mainCanvas');
+                const status = document.getElementById('status');
                     
                     gameboy = new GameBoyCore(canvas, romData);
                     
@@ -263,19 +249,65 @@
                     
                     document.getElementById('rom-loader').style.display = 'none';
                     document.getElementById('mainCanvas').classList.add('loaded');
-                    
-                    status.textContent = 'ROM loaded! Use arrow keys or touch controls.';
-                } catch (err) {
-                    status.textContent = 'Error loading ROM: ' + err.message;
-                    console.error('[ROM] Error:', err);
+                
+                document.getElementById('rom-loader').style.display = 'none';
+                document.getElementById('mainCanvas').classList.add('loaded');
+                document.getElementById('eject-button').classList.add('show');
+                
+                status.textContent = 'ROM loaded! Use arrow keys or touch controls.';
+            } catch (err) {
+                status.textContent = 'Error loading ROM: ' + err.message;
+                console.error('[ROM] Error:', err);
+            }
+        }
+        
+        document.getElementById('rom-file').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Create audio context during user gesture
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass && !window.XAudioJSWebAudioContextHandle) {
+                    window.XAudioJSWebAudioContextHandle = new AudioContextClass();
                 }
-            };
+            } catch(err) {
+                window.settings[0] = false;
+            }
             
-            reader.onerror = function() {
-                status.textContent = 'Error reading file';
-            };
+            const status = document.getElementById('status');
+            status.textContent = 'Loading...';
             
-            reader.readAsBinaryString(file);
+            if (file.name.toLowerCase().endsWith('.zip')) {
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const zip = await JSZip.loadAsync(arrayBuffer);
+                    
+                    const romFile = Object.keys(zip.files).find(name => 
+                        name.toLowerCase().endsWith('.gb') || name.toLowerCase().endsWith('.gbc')
+                    );
+                    
+                    if (!romFile) {
+                        status.textContent = 'No ROM file found in ZIP';
+                        return;
+                    }
+                    
+                    const romData = await zip.files[romFile].async('binarystring');
+                    await loadROMData(romData);
+                } catch (err) {
+                    status.textContent = 'Error loading ZIP: ' + err.message;
+                    console.error('[ZIP] Error:', err);
+                }
+            } else {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    await loadROMData(event.target.result);
+                };
+                reader.onerror = function() {
+                    status.textContent = 'Error reading file';
+                };
+                reader.readAsBinaryString(file);
+            }
         });
         
         // Keyboard controls
@@ -641,15 +673,19 @@
                 
                 const canvas = document.getElementById('mainCanvas');
                 canvas.classList.remove('loaded');
+                document.getElementById('eject-button').classList.remove('show');
                 
                 document.getElementById('rom-loader').style.display = 'block';
-                document.getElementById('status').textContent = 'Select a RetroBoy ROM file (.gb or .gbc)';
+                document.getElementById('status').textContent = 'Select a ROM file (.gb, .gbc, or .zip)';
                 document.getElementById('rom-file').value = '';
             }
         }
         
         // Power button at top left
         document.getElementById('power-button').addEventListener('click', powerOff);
+        
+        // Eject button
+        document.getElementById('eject-button').addEventListener('click', powerOff);
         
         // Bottom power toggle (keep for compatibility)
         document.getElementById('power-toggle').addEventListener('click', powerOff);
