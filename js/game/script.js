@@ -30,6 +30,12 @@ function setup() {
     noStroke(40)
 }
 
+function windowResized() {
+    resizeCanvas(windowHeight*(10/9), windowHeight);
+    boxSide = floor(windowHeight/18);
+    px = boxSide/8;
+}
+
 function draw() { 
   
   background(black)
