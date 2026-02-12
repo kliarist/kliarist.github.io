@@ -85,3 +85,18 @@ body {
         font-size: 8px;
     }
 }
+
+/* GitHub Link */
+.github-link {
+    position: absolute;
+    top: 7px;
+    right: 5px;
+    color: #000;
+    /*opacity: 0.6;*/
+    transition: opacity 0.3s;
+    z-index: 1000;
+}
+
+.github-link:hover {
+    opacity: 1;
+}
